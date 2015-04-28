@@ -1,0 +1,44 @@
+SWEN30006
+@author Nathan
+
+Project 3
+
+Members
+Ryan O'kane - rokane - 587723
+Nathan Malishev - nmalishev - 637410
+Lachlan Dee -  - 
+Lochie Brick - lbrick - 
+
+Absentees
+Lochie Brick sends his regards (absent)
+
+
+Meeting 1 Notes
+
+Decision of using git - required for part 2 of the project
+Members in their own time should complete and fimiliarize themselves with git
+http://git-scm.com/book/en/v1/Getting-Started
+
+
+Software Design Part
+
+Need
+
+	-Component Diagram
+
+	-Sequence Diagram's
+		background data retrieval
+		API call to retrieve all locations
+		API call to retrieve data for location id
+		API Call to retrieve the predictions for a period for a given lat and lon
+
+	-Detailed Class Diagrams of all models and controllers
+
+Meeting outcomes
+
+Each member to go away and attempt to create a class diagram. & think about all other required diagrams. Next meeting will come together to create an initial first class diagram. 
+
+Discussion of project. How do we store 999 post codes & there data? Scraping 999 times will take a long time surely this isn't it?
+
+
+Next meeting - Wednesday 5:30 Don Tojo's
