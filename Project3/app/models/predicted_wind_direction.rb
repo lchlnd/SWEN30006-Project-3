@@ -1,0 +1,2 @@
+class PredictedWindDirection < PredictedDatapoint
+end

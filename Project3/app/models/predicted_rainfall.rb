@@ -1,0 +1,2 @@
+class PredictedRainfall < PredictedDatapoint
+end

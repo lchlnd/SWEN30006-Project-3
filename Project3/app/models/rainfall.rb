@@ -1,0 +1,2 @@
+class Rainfall < Datapoint
+end

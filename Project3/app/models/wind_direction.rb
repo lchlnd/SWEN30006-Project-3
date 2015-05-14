@@ -1,0 +1,2 @@
+class WindDirection < Datapoint
+end

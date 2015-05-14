@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  value: 1.5
+  type: 
+  probability: 1.5
+  prediction_id: 
+
+two:
+  value: 1.5
+  type: 
+  probability: 1.5
+  prediction_id: 

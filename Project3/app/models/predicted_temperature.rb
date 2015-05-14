@@ -1,0 +1,2 @@
+class PredictedTemperature < PredictedDatapoint
+end

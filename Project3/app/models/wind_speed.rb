@@ -1,0 +1,2 @@
+class WindSpeed < Datapoint
+end
