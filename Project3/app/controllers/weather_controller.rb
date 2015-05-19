@@ -4,7 +4,7 @@ class WeatherController < ApplicationController
 	weather_locationsHash = Hash.new
 	locationsArray        = Array.new
 	
-
+	#Build Hash for JSON Object
 	@locations.each do |l|
 		locationHash               = Hash.new
 		locationHash[:id]          = l.name
@@ -15,7 +15,7 @@ class WeatherController < ApplicationController
   	end
   	weather_locationsHash[:date]      = Time.now.strftime("%d-%m-%y")
 	weather_locationsHash[:locations] = locationsArray
-
+	#Render JSON object
   	render json: weather_locationsHash
   end
 
