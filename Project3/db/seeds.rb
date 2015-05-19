@@ -7,7 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 URL = "http://www.bom.gov.au/vic/observations/vicall.shtml"
-
+URL = http://www.bom.gov.au/vic/observations/melbourne.shtml #for testing smaller
 require 'nokogiri'
 require 'open-uri'
 require 'csv'
@@ -100,9 +100,11 @@ stations.each do |station|
 	if (ActiveRecord::Base.connection.table_exists? 'locations')
 		#if the station doesn't exist make one
 		if( (Location.where(["name = ?", "#{stationName}"])).blank? )
+			#create the stations position
+			pos = Position.create({latitude: lat, longitude: lon})
 			#find parent postcode
 			parentPostcode = belongsToWhichPostcode(lat.to_f,lon.to_f)
-			parentPostcode.locations.create({name: stationName})
+			newLocation    = parentPostcode.locations.create({name: stationName, position_id: pos.id})
 		end
 	end
 end
