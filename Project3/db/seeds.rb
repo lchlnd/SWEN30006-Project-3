@@ -7,7 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 URL = "http://www.bom.gov.au/vic/observations/vicall.shtml"
-URL = http://www.bom.gov.au/vic/observations/melbourne.shtml #for testing smaller
+#URL = "http://www.bom.gov.au/vic/observations/melbourne.shtml #for testing smaller"
 require 'nokogiri'
 require 'open-uri'
 require 'csv'
