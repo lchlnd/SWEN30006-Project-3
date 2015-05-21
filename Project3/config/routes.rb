@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
   get 'weather/locations' 
+  get 'weather/data'
+
+  # Only temporary:
+  get 'weather/postcode_data'
   
 
   # The priority is based upon order of creation: first created -> highest priority.
