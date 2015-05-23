@@ -1,5 +1,6 @@
 class Reading < ActiveRecord::Base
   belongs_to :location
+  belongs_to :source
 
   has_many :datapoints
 
