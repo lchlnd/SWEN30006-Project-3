@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150514042005) do
+ActiveRecord::Schema.define(version: 20150523052128) do
 
   create_table "datapoints", force: :cascade do |t|
     t.float    "value"
@@ -99,9 +99,17 @@ ActiveRecord::Schema.define(version: 20150514042005) do
     t.integer  "location_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.datetime "timestamp"
+    t.integer  "source_id"
   end
 
   add_index "readings", ["location_id"], name: "index_readings_on_location_id"
+
+  create_table "sources", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "temperatures", force: :cascade do |t|
     t.datetime "created_at", null: false
