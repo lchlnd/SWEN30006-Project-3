@@ -20,12 +20,21 @@ namespace :weather do
 
   # Scrape the BOM site for data
   task :scrape_bom => :environment do
+    active_location_ids = Set.new
     source = Source.find_or_create_by(name: 'BOM')
     info_table = load_bom_info_table
     info_table.each do |row|
       # Get name, check if it is in database
       name = row.xpath('./th/a').text
-      if location = Location.find_by(name: name)
+      if (location = Location.find_by(name: name, active: true))
+        # Flag as still active
+        if location.id == 1
+          puts 'in this if'
+        else
+          active_location_ids << location.id
+        end
+
+
         # Location exists, get information
         temp = row.xpath('./td')[1].text.to_f
         rain = row.xpath('./td')[12].text.to_f
@@ -45,6 +54,12 @@ namespace :weather do
         reading.source = source
         reading.save
       end
+    end
+
+    # Flag inactive locations
+    Location.update_all(active: false)
+    active_location_ids.each do |x|
+      Location.update(x, active: true)
     end
   end
 
