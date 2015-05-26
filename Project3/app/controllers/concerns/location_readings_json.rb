@@ -8,10 +8,10 @@ module LocationReadingsJson
 		readings.each do |r|
 			reading_hash = {}
 			reading_hash["time"] = r.created_at.to_s
-			reading_hash["temp"] = r.temperature.to_s
-			reading_hash["precip"] = r.rainfall.to_s
-			reading_hash["wind_direction"] = r.wind_direction.to_s
-			reading_hash["wind_speed"] = r.wind_speed.to_s
+			reading_hash["temp"] = r.temperature.value.to_s
+			reading_hash["precip"] = r.rainfall.value.to_s
+			reading_hash["wind_direction"] = r.wind_direction.value.to_s
+			reading_hash["wind_speed"] = r.wind_speed.value.to_s
 			measurements << reading_hash
 		end
 

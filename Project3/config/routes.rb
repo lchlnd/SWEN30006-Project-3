@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get 'weather/locations' 
-  get 'weather/data'
+  get 'weather/data/:id/:date', to: 'weather#data'
 
   # Only temporary:
   get 'weather/postcode_data'
