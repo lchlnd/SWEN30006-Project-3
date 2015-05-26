@@ -104,7 +104,7 @@ stations.each do |station|
 			pos = Position.create({latitude: lat, longitude: lon})
 			#find parent postcode
 			parentPostcode = belongsToWhichPostcode(lat.to_f,lon.to_f)
-			newLocation    = parentPostcode.locations.create({name: stationName, position_id: pos.id})
+			newLocation    = parentPostcode.locations.create({name: stationName, position_id: pos.id, active: true})
 		end
 	end
 end
