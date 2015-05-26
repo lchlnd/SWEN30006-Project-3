@@ -28,12 +28,7 @@ namespace :weather do
       name = row.xpath('./th/a').text
       if (location = Location.find_by(name: name, active: true))
         # Flag as still active
-        if location.id == 1
-          puts 'in this if'
-        else
-          active_location_ids << location.id
-        end
-
+        active_location_ids << location.id
 
         # Location exists, get information
         temp = row.xpath('./td')[1].text.to_f
