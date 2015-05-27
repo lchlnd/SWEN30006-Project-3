@@ -144,7 +144,7 @@ class Regression
 	#Goes through each regression & returns a hash with highest corresponding r^2 value
 	#Hash is returned in form {:type x, :a z, :b z, etc}
 	#{:type log, :a 10, :b 2}
-	#{:type polynomial, :degree 4, a0: 0, a1: 2}
+	#{:type polynomial, :degree 4, coefficients: [a0,a1,a2,a3], r2: x}
 	def self.best_fit xvals, yvals
 		best_r2 = -Float::MAX
 		info = {}
