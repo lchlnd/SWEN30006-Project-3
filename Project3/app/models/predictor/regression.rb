@@ -184,18 +184,3 @@ end
 
 
 
-data = CSV.read(ARGV[0], {:headers => true, :converters => :numeric})
-begin
-	#Regression.public_send(:"#{ARGV[1]}", data['time'], data['datapoint'])
-	Regression.best_fit(data['time'],data['datapoint'])
-
-
-rescue Math::DomainError=>e
-	puts "Cannot perform #{ARGV[1]} regression on this data"
-	:error
-rescue NoMethodError=>e
-	puts "Error: second command line argument must be one of 'polynomial', 'linear', 'exponential' or 'logarithmic'"
-	:error
-end
-
-
