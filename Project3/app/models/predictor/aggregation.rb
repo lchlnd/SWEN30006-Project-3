@@ -1,39 +1,32 @@
 class Aggregation
   EPSILON = 0.0001
-  TYPES = %w{rainfall wind_direction wind_speed temperature}
-
-
-  # @param latitude Latitude coordinate of point of interest
-  # @param longitude Longitude coordinate of point of interest
-  # @return Hash of the form {regression_type => {time_stamp => value ...} ...}.
   def self.build_aggregate_hash(latitude, longitude)
+    # Types of regressions
+    types = ['rainfall', 'wind_direction', 'wind_speed', 'temperature']
 
-    # Locations within range
-    location_distances = get_station_distances(latitude, longitude, 5)
+    # Get weights
+    location_distances = get_station_distances(latitude, longitude)
 
-    # Get all readings for each time period of interest
-    time_hash = get_time_hash(location_distances, 12)
+    # Get a hash which has a time value and readings for this time
+    time_hash = get_time_hash(location_distances)
 
-    # Calculate weights for each location
+    # Calculate weights
     weights = Hash.new
+
     location_distances.each { |k, v| weights[k] = (v >= EPSILON ? 1/v : 1/EPSILON)  }
+    # Sum the weights
     sum_weights = 0
     weights.each { |k, v| sum_weights += v }
 
-    # Aggregate for each value type
     results = Hash.new
-    TYPES.each do |type|
+    types.each do |type|
       results[type] = aggregate(time_hash, sum_weights, weights, type)
-    end
+    end 
 
     return results
   end
 
-  # @param latitude Latitude coordinate of point of interest
-  # @param longitude Longitude coordinate of point of interest
-  # @param num Number of stations to return
-  # @return Hash in form of {location_id => distance}
-  def self.get_station_distances(latitude, longitude, num)
+  def self.get_station_distances(latitude, longitude)
     all_stations = Hash.new
 
     # Get each distance
@@ -47,54 +40,51 @@ class Aggregation
     # Get five closest
     results = Hash.new
 
-    Hash[Array(all_stations)[0..num-1]].each_pair do |id, dist|
+    Hash[Array(all_stations)[0..4]].each_pair do |id, dist|
       results[id] = dist
     end
     return results
   end
 
-  # @param location_distances Hash in form of {location_id => distance}
-  # @param hours Range to find readings
-  # @return Hash in form of {:time_stamp => [reading_from_station_1, reading_from_station_2, ...] ...}
-  def self.get_time_hash(location_distances, hours)
+  def self.get_time_hash(location_weights)
+    # get first
+    first_id = location_weights.first.first
+    readings = Location.find(first_id).readings.where(:created_at => 12.hours.ago..DateTime.now)
 
-    # Find latest readings for first location
-    first_id = location_distances.first.first
-    readings = Location.find(first_id).readings.where(:created_at => hours.hours.ago..DateTime.now)
-
-    # Find readings from other stations at approx same time as first stations readings
+    # Hash to store each time period of readings
     time_hash = Hash.new
+
+    # Now find readings for other stations within small time frames
     readings.each do |reading|
       sim_readings = Array.new
-      # Add current readings to simultaneous readings
+      # Add current readings to sim_readings
       sim_readings << reading
 
-      # Get readings for each location
-      Hash[Array(location_distances)[1..-1]].each_pair do |id, dist|
-        # Look within time stamp of 2 minutes each way
+      # Look at each station readings
+      Hash[Array(location_weights)[1..-1]].each_pair do |id, dist|
         sim_readings << Location.find(id).readings.find_by(:created_at => (reading.created_at - 2.minutes)..(reading.created_at + 2.minutes))
       end
+
       time_hash[reading.created_at] = sim_readings
     end
 
     return time_hash
   end
 
-  # @param time_hash Hash in form of {:time_stamp => [reading_from_station_1, reading_from_station_2, ...] ...}
-  # @param sum_weights Sum of all of the location weights
-  # @param weights Hash in form of {location_id => weight ...}
-  # @param type Type of data to aggregate
   def self.aggregate(time_hash, sum_weights, weights, type)
+    # Hash for results
     results = Hash.new
 
-    # Want to get one data value for each time stamp
+    # Get a value for each time
     time_hash.each do |time, readings|
       num = 0.0
 
-      # Calculate the weight for each reading
+      # Weight for each reading
       readings.each do |reading|
         if reading.class == Reading
-          num += (reading.send(type).value * weights[reading.location_id]) if reading.send(type).value != nil
+          if reading.send(type).value != nil
+            num += (reading.send(type).value * weights[reading.location_id])
+          end
         end
       end
       # Now calculate the value and add to results
