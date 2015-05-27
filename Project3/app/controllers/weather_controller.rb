@@ -27,7 +27,7 @@ class WeatherController < ApplicationController
 			@current_temp = 20
 			@current_cond = "sunny"
 			respond_to do |format|
-				format.html
+				format.html {render "location_data"}
 				format.js
 				format.json {render json: build_location_readings(@readings, @date, @current_temp, @current_cond)}
 			end
@@ -53,7 +53,7 @@ class WeatherController < ApplicationController
 			end
 
 			respond_to do |format|
-				format.html
+				format.html {render "postcode_data"}
 				format.js
 				format.json {render json: build_postcode_readings(@date, @location_readings)}#, @last_updates)}
 			end
