@@ -1,3 +1,27 @@
-<h1>Weather#locations</h1>
-<p>Find me in app/views/weather/locations.html.erb</p>
+<h1 class= page-header>Listing Locations</h1>
+
+
+<table class= table>
+    <thead>
+    	<caption>Victorian Weather Station Locations</caption>
+     	<tr>
+       		<th> Location ID </th>
+       		<th> Latitude </th>
+        	<th> Longitude </th>
+        	<th> Last Update </th>
+      	</tr>
+    </thead>
+  
+    <tbody>
+      <% @locations.each do |location| %>
+        <tr>
+        	<td><%= location.name %></td>
+        	<td><%= location.position.latitude %></td>
+        	<td><%= location.position.longitude %></td>
+        	<td><%= location.updated_at %></td> 
+        </tr>
+      <% end %>
+    </tbody>
+
+</table>
 
