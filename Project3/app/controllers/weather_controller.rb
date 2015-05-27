@@ -3,6 +3,7 @@ class WeatherController < ApplicationController
 	include LocationReadingsJson
 	include PostcodeReadingsJson
 
+	# get 'weather/locations' 
 	def locations
 		@locations = Location.all
 		respond_to do |format|
@@ -13,6 +14,7 @@ class WeatherController < ApplicationController
 		end
 	end
 
+	# get 'weather/data/:id/:date'
 	def data
 		@date = Date.parse(params[:date])
 		@date_readings = []
@@ -63,16 +65,35 @@ class WeatherController < ApplicationController
 		end
 	end
 
+	# get 'weather/prediction/:lat/:long/:period'
 	def predict
-		
-		Predictor.create
+		if (@pos = Position.find_by(:latitude => params[:lat], :longitude => params[:long])) == nil
+			@pos = Position.create(:latitude => params[:lat], :longitude => params[:long])
+		end
+		@prediction_data = {"latitude" => @pos.latitude, "longitude" => @pos.longitude}
+		@prediction_data["predictions"] = Predictor.create pos, params[:period]
 
+		respond_to do |format|
+			format.html
+			format.js
+			format.json {render json: @prediction_data}
+		end
 	end
 
+	# get 'weather/prediction/:postcode/:period'
 	def postcode_predict
-		@postcode = Postcode.find_by_code(params[:postcode])
-		lat = @postcode.position.latitude
-		long = @postcode.position.longitude
-		redirect_to :action => :predict, :period => params[:period].to_s,  :lat => lat.to_s, :long => long.to_s
+
+		if (@postcode = Postcode.find_by_code(params[:postcode])) == nil
+			return :error
+		end
+		
+		@prediction_data = {"postcode" => params[:postcode]}
+		@prediction_data["predictions"] = Predictor.create  @postcode.position, params[:period]
+
+		respond_to do |format|
+			format.html
+			format.js
+			format.json {render json: @prediction_data}
+		end
 	end
 end

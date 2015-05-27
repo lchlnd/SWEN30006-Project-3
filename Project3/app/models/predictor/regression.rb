@@ -5,6 +5,43 @@ class Regression
 
 	EPS = 0.005
 
+	#Goes through each regression & returns a hash with highest corresponding r^2 value
+	#Hash is returned in form {:type x, :a z, :b z, etc}
+	#{:type log, :a 10, :b 2}
+	#{:type polynomial, :degree 4, coefficients: [a0,a1,a2,a3], r2: x}
+	def self.best_fit xvals, yvals
+		best_r2 = -Float::MAX
+		info = {}
+		tmp ={}
+
+		#poly_nom
+		tmp = polynomial( xvals , yvals)
+		if( tmp[:r2] > best_r2 )
+			info = tmp
+			best_r2 = tmp[:r2]
+		end
+		#linear
+		tmp = linear( xvals , yvals)
+		if( tmp[:r2] > best_r2 )
+			info = tmp
+			best_r2 = tmp[:r2]
+		end
+		#log
+		tmp = logarithmic( xvals , yvals)
+		if( tmp[:r2] > best_r2 )
+			info = tmp
+			best_r2 = tmp[:r2]
+		end
+		#poly_nom
+		tmp = exponential( xvals , yvals)
+		if( tmp[:r2] > best_r2 )
+			info = tmp
+			best_r2 = tmp[:r2]
+		end
+
+		info
+	end
+
 	#Takes an array of x values, an array of corresponding y values and a degree and applies a polynomial
 	# regression of the given degree. Returns the coefficients of the polynomial.
 	#Function copied from:  
@@ -29,16 +66,20 @@ class Regression
 		#Find the polynomial which gives the lowest variance.
 		for deg in (2..10)
 			coefficients = poly_regress(xvals, yvals, deg).map { |coeff| coeff.round(2)}
-			r2 = r_squared(xvals, yvals) { |x| coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
+			func = lambda { |x| coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
+			r2 = r_squared(xvals, yvals, func)
 			if r2 > best_r2
 				best_r2 = r2
-				#puts "best r2 =", r2
-				best_coeff = coefficients
-				best_degree = deg
+				
+				best_coefficients = []
+				coefficients.each do |c|
+					best_coefficients << c
+				end
+				best_func = lambda { |x| best_coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
 			end
 		end
 
-		info = {:type => :polynomial, :degree => best_degree,  :coefficients => best_coeff, :r2 => best_r2}
+		info = {:function => best_func, :r2 => best_r2}
 
 		#Convert the polynomial into a string.  Do not include a term if its coefficient is less than or equal to EPS (=0.005), 
 		# unless it is the coefficient of the highest order term.
@@ -69,10 +110,11 @@ class Regression
 
 		
 		#puts "%.2fx %c %.2f" % [a, b >= 0 ? '+' : '-', b.abs]
-		r2 = r_squared(xvals, yvals) { |x| a*x + b }
+		func = lambda { |x| a*x + b }
+		r2 = r_squared(xvals, yvals, func)
 		#puts "R squared = #{r2}"
 
-		info = {:type => :linear, :coefficients => coefficients,:r2 => r2}
+		info = {:function => func, :r2 => r2}
 	end
 
 
@@ -94,11 +136,12 @@ class Regression
 
 		coefficients = [a,b]
 		#puts "%.2f*ln(x) %c %.2f" % [b, a>=0 ? '+' : '-', a.abs]
+		func = lambda { |x| b*Math.log(x) + a}
 
-		r2 = r_squared(xvals, yvals) { |x| b*Math.log(x) + a}
+		r2 = r_squared(xvals, yvals, func)
 		#puts "R squared = #{r2}"
 
-		info = {:type => :logarithmic, :coefficients => coefficients,:r2 => r2}
+		info = {:function => func, :r2 => r2}
 
 	end
 
@@ -118,69 +161,29 @@ class Regression
 		b = (n*sum_x_ln_y - sum_x*sum_ln_y)/(n*sum_x2 - sum_x**2).round(2)
 		coefficients = [a,b]
 		#puts "%.2f*e^%.2fx" % [a, b]
-
-		r2 = r_squared(xvals, yvals) { |x| a*Math.exp(b*x) }
+		func = lambda { |x| a*Math.exp(b*x) }
+		r2 = r_squared(xvals, yvals, func) 
 		#puts "R squared = #{r2}"
-		info = {:type => :exponential,  :coefficients => coefficients,:r2 => r2}
+		info = {:function => func, :r2 => r2}
 	end
 
 
 	#Takes an array of x values, an array of corresponding y values and a block defining a function that.
 	#Returns the R^2 value of these arguments.
-	def self.r_squared xvals, yvals
-		if block_given?
-			y_model = []
-			xvals.each {|x_i| y_model << yield(x_i)}
-			ss_res= ((yvals.zip(y_model)).inject(0) { |var, (y_i, f_i)| var + (y_i - f_i)**2 })
-			mean = (yvals.inject(0) { |sum, y_i| sum + y_i })/yvals.length
-			ss_tot = yvals.inject(0) { |sum, y_i| sum + (y_i - mean)**2 }
-			r2 = 1 - ss_res/ss_tot
-		else
-			puts "Error: Function 'Regression.r_squared' requires a block argument."
-			:error
-		end
+	def self.r_squared xvals, yvals, func
+
+		y_model = []
+		xvals.each {|x_i| y_model << func.call(x_i)}
+		ss_res= ((yvals.zip(y_model)).inject(0) { |var, (y_i, f_i)| var + (y_i - f_i)**2 })
+		mean = (yvals.inject(0) { |sum, y_i| sum + y_i })/yvals.length
+		ss_tot = yvals.inject(0) { |sum, y_i| sum + (y_i - mean)**2 }
+		r2 = 1 - ss_res/ss_tot
+
 	end
-
-	#Goes through each regression & returns a hash with highest corresponding r^2 value
-	#Hash is returned in form {:type x, :a z, :b z, etc}
-	#{:type log, :a 10, :b 2}
-	#{:type polynomial, :degree 4, coefficients: [a0,a1,a2,a3], r2: x}
-	def self.best_fit xvals, yvals
-		best_r2 = -Float::MAX
-		info = {}
-		tmp ={}
-
-		#poly_nom
-		tmp = polynomial( xvals , yvals)
-		if( tmp[:r2] > best_r2 )
-			info = tmp
-			best_r2 = tmp[:r2]
-		end
-		#linear
-		tmp = linear( xvals , yvals)
-		if( tmp[:r2] > best_r2 )
-			info = tmp
-			best_r2 = tmp[:r2]
-		#log
-		tmp = logarithmic( xvals , yvals)
-		if( tmp[:r2] > best_r2 )
-			info = tmp
-			best_r2 = tmp[:r2]
-		#poly_nom
-		tmp = exponential( xvals , yvals)
-		if( tmp[:r2] > best_r2 )
-			info = tmp
-			best_r2 = tmp[:r2]
-
-		info
-	end
-
 
 	private_class_method :r_squared
 	private_class_method :poly_regress
-
 end
-
 
 
 

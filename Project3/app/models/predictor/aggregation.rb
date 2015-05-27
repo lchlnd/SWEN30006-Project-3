@@ -1,31 +1,32 @@
 class Aggregation
+  EPSILON = 0.0001
   def self.build_aggregate_hash(latitude, longitude)
     # Types of regressions
     types = ['rainfall', 'wind_direction', 'wind_speed', 'temperature']
 
     # Get weights
-    location_weights = get_station_weights(latitude, longitude)
+    location_distances = get_station_distances(latitude, longitude)
 
     # Get a hash which has a time value and readings for this time
-    time_hash = get_time_hash(location_weights)
-
-    # Total distance
-    dist = 0
-    location_weights.each { |k, v| dist += v }
+    time_hash = get_time_hash(location_distances)
 
     # Calculate weights
     weights = Hash.new
-    location_weights.each { |k, v| weights[k] = (dist - v) / dist }
+
+    location_distances.each { |k, v| weights[k] = (v >= EPSILON ? 1/v : 1/EPSILON)  }
+    # Sum the weights
+    sum_weights = 0
+    weights.each { |k, v| sum_weights += v }
 
     results = Hash.new
     types.each do |type|
-      results[type] = aggregate(time_hash, dist, weights, type)
-    end
+      results[type] = aggregate(time_hash, sum_weights, weights, type)
+    end 
 
     return results
   end
 
-  def self.get_station_weights(latitude, longitude)
+  def self.get_station_distances(latitude, longitude)
     all_stations = Hash.new
 
     # Get each distance
@@ -38,6 +39,7 @@ class Aggregation
 
     # Get five closest
     results = Hash.new
+
     Hash[Array(all_stations)[0..4]].each_pair do |id, dist|
       results[id] = dist
     end
@@ -69,7 +71,7 @@ class Aggregation
     return time_hash
   end
 
-  def self.aggregate(time_hash, total_distance, weights, type)
+  def self.aggregate(time_hash, sum_weights, weights, type)
     # Hash for results
     results = Hash.new
 
@@ -86,7 +88,7 @@ class Aggregation
         end
       end
       # Now calculate the value and add to results
-      results[time] = num / total_distance
+      results[time] = num / sum_weights
     end
     return results
   end
