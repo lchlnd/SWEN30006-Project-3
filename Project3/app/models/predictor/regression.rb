@@ -22,6 +22,8 @@ class Regression
 	#Takes an array of x values and an array of corresponding y values and applies a polynomial
 	# regression of each degree between 1 and 10 (inclusive), printing the equation with the best fit. 
 	def self.polynomial xvals, yvals
+
+		
 		
 		best_r2 = -Float::MAX
 		#Find the polynomial which gives the lowest variance.
@@ -30,27 +32,31 @@ class Regression
 			r2 = r_squared(xvals, yvals) { |x| coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
 			if r2 > best_r2
 				best_r2 = r2
-				puts "best r2 =", r2
+				#puts "best r2 =", r2
 				best_coeff = coefficients
+				best_degree = deg
 			end
 		end
 
+		info = {:type => :polynomial, :degree => best_degree,  :coefficients => best_coeff, :r2 => best_r2}
+
 		#Convert the polynomial into a string.  Do not include a term if its coefficient is less than or equal to EPS (=0.005), 
 		# unless it is the coefficient of the highest order term.
-		poly_string = ""
-		best_coeff.to_enum.with_index.reverse_each do |coeff, i| 
-			if i == (best_coeff.length - 1)
-				poly_string.concat("%.2fx^#{i} " % coeff)
-			elsif i == 0
-				poly_string.concat("%c %.2f " % [coeff > 0 ? '+' : '-', coeff.abs])
-			elsif i == 1
-				poly_string.concat("%c %.2fx " % [coeff>0? '+' : '-', coeff.abs])
-			else
-				poly_string.concat("%c %.2fx^#{i} " % [coeff>0 ? '+' : '-', coeff.abs])
-			end
-		end
-		puts poly_string
-		puts "R squared = #{best_r2}"	
+		# poly_string = ""
+		# best_coeff.to_enum.with_index.reverse_each do |coeff, i| 
+		# 	if i == (best_coeff.length - 1)
+		# 		poly_string.concat("%.2fx^#{i} " % coeff)
+		# 	elsif i == 0
+		# 		poly_string.concat("%c %.2f " % [coeff > 0 ? '+' : '-', coeff.abs])
+		# 	elsif i == 1
+		# 		poly_string.concat("%c %.2fx " % [coeff>0? '+' : '-', coeff.abs])
+		# 	else
+		# 		poly_string.concat("%c %.2fx^#{i} " % [coeff>0 ? '+' : '-', coeff.abs])
+		# 	end
+		# end
+		
+		info
+
 	end
 
 
@@ -62,9 +68,11 @@ class Regression
 		b = coefficients[0]
 
 		
-		puts "%.2fx %c %.2f" % [a, b >= 0 ? '+' : '-', b.abs]
+		#puts "%.2fx %c %.2f" % [a, b >= 0 ? '+' : '-', b.abs]
 		r2 = r_squared(xvals, yvals) { |x| a*x + b }
-		puts "R squared = #{r2}"
+		#puts "R squared = #{r2}"
+
+		info = {:type => :linear, :coefficients => coefficients,:r2 => r2}
 	end
 
 
@@ -84,10 +92,13 @@ class Regression
 		a = ((sum_y - b*sum_ln_x)/n).round(2)
 		b = b.round(2)
 
-		puts "%.2f*ln(x) %c %.2f" % [b, a>=0 ? '+' : '-', a.abs]
+		coefficients = [a,b]
+		#puts "%.2f*ln(x) %c %.2f" % [b, a>=0 ? '+' : '-', a.abs]
 
 		r2 = r_squared(xvals, yvals) { |x| b*Math.log(x) + a}
-		puts "R squared = #{r2}"
+		#puts "R squared = #{r2}"
+
+		info = {:type => :logarithmic, :coefficients => coefficients,:r2 => r2}
 
 	end
 
@@ -105,11 +116,12 @@ class Regression
 		n = xvals.length
 		a = Math.exp((sum_ln_y*sum_x2 - sum_x*sum_x_ln_y)/(n*sum_x2 - sum_x**2)).round(2)
 		b = (n*sum_x_ln_y - sum_x*sum_ln_y)/(n*sum_x2 - sum_x**2).round(2)
-
-		puts "%.2f*e^%.2fx" % [a, b]
+		coefficients = [a,b]
+		#puts "%.2f*e^%.2fx" % [a, b]
 
 		r2 = r_squared(xvals, yvals) { |x| a*Math.exp(b*x) }
-		puts "R squared = #{r2}"
+		#puts "R squared = #{r2}"
+		info = {:type => :exponential,  :coefficients => coefficients,:r2 => r2}
 	end
 
 
@@ -129,23 +141,46 @@ class Regression
 		end
 	end
 
+	#Goes through each regression & returns a hash with highest corresponding r^2 value
+	#Hash is returned in form {:type x, :a z, :b z, etc}
+	#{:type log, :a 10, :b 2}
+	#{:type polynomial, :degree 4, coefficients: [a0,a1,a2,a3], r2: x}
+	def self.best_fit xvals, yvals
+		best_r2 = -Float::MAX
+		info = {}
+		tmp ={}
+
+		#poly_nom
+		tmp = polynomial( xvals , yvals)
+		if( tmp[:r2] > best_r2 )
+			info = tmp
+			best_r2 = tmp[:r2]
+		end
+		#linear
+		tmp = linear( xvals , yvals)
+		if( tmp[:r2] > best_r2 )
+			info = tmp
+			best_r2 = tmp[:r2]
+		#log
+		tmp = logarithmic( xvals , yvals)
+		if( tmp[:r2] > best_r2 )
+			info = tmp
+			best_r2 = tmp[:r2]
+		#poly_nom
+		tmp = exponential( xvals , yvals)
+		if( tmp[:r2] > best_r2 )
+			info = tmp
+			best_r2 = tmp[:r2]
+
+		info
+	end
+
+
 	private_class_method :r_squared
 	private_class_method :poly_regress
 
 end
 
 
-
-
-data = CSV.read(ARGV[0], {:headers => true, :converters => :numeric})
-begin
-	Regression.public_send(:"#{ARGV[1]}", data['time'], data['datapoint'])
-rescue Math::DomainError=>e
-	puts "Cannot perform #{ARGV[1]} regression on this data"
-	:error
-rescue NoMethodError=>e
-	puts "Error: second command line argument must be one of 'polynomial', 'linear', 'exponential' or 'logarithmic'"
-	:error
-end
 
 
