@@ -1,0 +1,31 @@
+<h1 class= page-header>Listing Data for (Location Name here)</h1>
+
+<p>Date: (Date Here)</p>
+<p>Current Temperature: (Current temp HERE)</p>
+<p>Current Condition: (Current Condition Here)</p>
+
+<table class= table>
+    <thead>
+    	<caption>Measurements taken</caption>
+     	<tr>
+       		<th> Time </th>
+       		<th> Temperature </th>
+        	<th> Precip </th>
+        	<th> Wind Direction </th>
+          <th> Wind Speed </th>
+      	</tr>
+    </thead>
+  
+    <tbody>
+      <% @readings.each do |reading| %>
+        <tr>
+        	<td><%= reading.created_at %></td>
+        	<td><%= reading.temperature.value %></td>
+        	<td><%= reading.rainfalls.value %></td>
+        	<td><%= reading.wind_directions.value %></td> 
+          <td><%= reading.wind_speeds.value %></td> 
+        </tr>
+      <% end %>
+    </tbody>
+
+</table>
