@@ -13,32 +13,34 @@ class Regression
 		best_r2 = -Float::MAX
 		info = {}
 		tmp ={}
-
 		#poly_nom
 		tmp = polynomial( xvals , yvals)
 		if( tmp[:r2] > best_r2 )
 			info = tmp
 			best_r2 = tmp[:r2]
 		end
+		puts "poly: #{tmp}"
 		#linear
 		tmp = linear( xvals , yvals)
 		if( tmp[:r2] > best_r2 )
 			info = tmp
 			best_r2 = tmp[:r2]
 		end
+		puts "linear: #{tmp}"
 		#log
 		tmp = logarithmic( xvals , yvals)
 		if( tmp[:r2] > best_r2 )
 			info = tmp
 			best_r2 = tmp[:r2]
 		end
+		puts "log: #{tmp}"
 		#poly_nom
 		tmp = exponential( xvals , yvals)
 		if( tmp[:r2] > best_r2 )
 			info = tmp
 			best_r2 = tmp[:r2]
 		end
-
+		puts "exp #{tmp}"
 		info
 	end
 
@@ -48,11 +50,15 @@ class Regression
 	# => SWEN30006 Semester 1 2015 Project 1
 	# => 'Getting to Grips with Ruby'
 	# => Author: Mat Blair
-	def self.poly_regress xvals, yvals, degree
+	def self.poly_regress xvals, yvals, degree 
+		
 		x_data = xvals.map { |x_i| (0..degree).map{ |pow| (x_i**pow).to_f } }
 		mx = Matrix[*x_data]
 		my = Matrix.column_vector(yvals)
-		coefficients = ((mx.t * mx).inv * mx.t * my).transpose.to_a[0]
+
+		temp = mx.t * mx
+
+		coefficients = (temp.inv * mx.t * my).transpose.to_a[0]
 	end
 
 
@@ -65,9 +71,10 @@ class Regression
 		best_r2 = -Float::MAX
 		#Find the polynomial which gives the lowest variance.
 		for deg in (2..10)
-			coefficients = poly_regress(xvals, yvals, deg).map { |coeff| coeff.round(2)}
-			func = lambda { |x| coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
+			coefficients = poly_regress(xvals, yvals, deg)
+			func = Proc.new{ |x| coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
 			r2 = r_squared(xvals, yvals, func)
+
 			if r2 > best_r2
 				best_r2 = r2
 				
@@ -78,6 +85,7 @@ class Regression
 				best_func = lambda { |x| best_coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
 			end
 		end
+
 
 		info = {:function => best_func, :r2 => best_r2}
 
@@ -95,7 +103,6 @@ class Regression
 		# 		poly_string.concat("%c %.2fx^#{i} " % [coeff>0 ? '+' : '-', coeff.abs])
 		# 	end
 		# end
-		
 		info
 
 	end
@@ -171,14 +178,14 @@ class Regression
 	#Takes an array of x values, an array of corresponding y values and a block defining a function that.
 	#Returns the R^2 value of these arguments.
 	def self.r_squared xvals, yvals, func
-
 		y_model = []
 		xvals.each {|x_i| y_model << func.call(x_i)}
 		ss_res= ((yvals.zip(y_model)).inject(0) { |var, (y_i, f_i)| var + (y_i - f_i)**2 })
 		mean = (yvals.inject(0) { |sum, y_i| sum + y_i })/yvals.length
 		ss_tot = yvals.inject(0) { |sum, y_i| sum + (y_i - mean)**2 }
+		#puts "res = #{ss_res}"
+		#puts "tot = #{ss_tot}"
 		r2 = 1 - ss_res/ss_tot
-
 	end
 
 	private_class_method :r_squared

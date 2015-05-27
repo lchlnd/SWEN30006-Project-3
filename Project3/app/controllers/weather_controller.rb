@@ -71,7 +71,7 @@ class WeatherController < ApplicationController
 			@pos = Position.create(:latitude => params[:lat], :longitude => params[:long])
 		end
 		@prediction_data = {"latitude" => @pos.latitude, "longitude" => @pos.longitude}
-		@prediction_data["predictions"] = Predictor.create pos, params[:period]
+		@prediction_data["predictions"] = Predictor.create @pos, params[:period]
 
 		respond_to do |format|
 			format.html
