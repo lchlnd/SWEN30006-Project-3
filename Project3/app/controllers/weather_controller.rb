@@ -26,10 +26,12 @@ class WeatherController < ApplicationController
 			end
 			@current_temp = 20
 			@current_cond = "sunny"
+			puts "Hello"
+			puts @date_readings
 			respond_to do |format|
 				format.html {render "location_data"}
 				format.js
-				format.json {render json: build_location_readings(@readings, @date, @current_temp, @current_cond)}
+				format.json {render json: build_location_readings(@date_readings, @date, @current_temp, @current_cond)}
 			end
 		elsif (@postcode = Postcode.find_by_code params[:id].to_i) != nil
 
