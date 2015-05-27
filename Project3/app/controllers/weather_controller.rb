@@ -47,20 +47,20 @@ class WeatherController < ApplicationController
 						@location_readings[l] << r
 					end
 				end
-				puts "Hello last updates"
-				@last_updates[l] = readings.order("created_at").last.created_at
+				puts "In locations loop"
+
+				#@last_updates[l] = readings.order("created_at").last.created_at
 			end
 
 			respond_to do |format|
 				format.html
 				format.js
-				format.json {render json: build_postcode_readings(@date, @location_readings, @last_updates)}
+				format.json {render json: build_postcode_readings(@date, @location_readings)}#, @last_updates)}
 			end
 		else
 			render "Error - invalid location/postcode id"
 		end
 	end
-
 
 
 	# Need to find a way to combine this with the above data method i.e. to distinguish between whether the parameter is
@@ -89,30 +89,4 @@ class WeatherController < ApplicationController
 		end
 
 	end
-
-
-
-
-
-		# @locations            = Location.all
-		# weather_locationsHash = Hash.new
-		# locationsArray        = Array.new
-		
-		# #Build Hash for JSON Object
-		# @locations.each do |l|
-		# 	locationHash               = Hash.new
-		# 	locationHash[:id]          = l.name
-		# 	locationHash[:lat]         = l.position.latitude
-		# 	locationHash[:lon]         = l.position.longitude
-		# 	locationHash[:last_update] = l.updated_at
-		# 	locationsArray << locationHash
-	 #  	end
-	 #  	weather_locationsHash[:date]      = Time.now.strftime("%d-%m-%y")
-		# weather_locationsHash[:locations] = locationsArray
-		# #Render JSON object
-	 #  	render json: weather_locationsHash
-	  
-
-
-  
 end
