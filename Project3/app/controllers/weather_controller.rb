@@ -49,44 +49,30 @@ class WeatherController < ApplicationController
 				end
 				puts "In locations loop"
 
-				#@last_updates[l] = readings.order("created_at").last.created_at
+				@last_updates[l] = readings.order("created_at").last.created_at
 			end
 
 			respond_to do |format|
 				format.html {render "postcode_data"}
 				format.js
-				format.json {render json: build_postcode_readings(@date, @location_readings)}#, @last_updates)}
+				format.json {render json: build_postcode_readings(@date, @location_readings, @last_updates)}
 			end
 		else
-			render "Error - invalid location/postcode id"
+			# Need a way to return an error message if the user enters an invalid location_id or postcode
+			#render "Error - invalid location/postcode id"
 		end
 	end
 
+	def predict
+		
+		Predictor.create
 
-	# Need to find a way to combine this with the above data method i.e. to distinguish between whether the parameter is
-	# postcode or a location_id
-	def postcode_data
-		# Pretend a postcode and date have been given:
-		postcode = 3525
-		date = Date.today
+	end
 
-
-		p = Postcode.find_by_code(postcode)
-		@locations = p.locations
-
-		# Prepare data for JSON builder:
-		data = {}
-		@locations.each do |l|
-			puts "a location?"
-			readings = Reading.where(:location_id => l.id, :created_at => date)
-			data[l] = readings
-		end
-
-		respond_to do |format|
-			format.html
-			format.js
-			format.json {render json: build_postcode_readings(date, data)}
-		end
-
+	def postcode_predict
+		@postcode = Postcode.find_by_code(params[:postcode])
+		lat = @postcode.position.latitude
+		long = @postcode.position.longitude
+		redirect_to :action => :predict, :period => params[:period].to_s,  :lat => lat.to_s, :long => long.to_s
 	end
 end

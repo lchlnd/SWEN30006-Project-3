@@ -2,7 +2,7 @@ module PostcodeReadingsJson
 	extend ActiveSupport::Concern
 
 	# Return a hash map containing all of the data to be included in the JSON object
-	def build_postcode_readings date, location_readings#, last_updates
+	def build_postcode_readings date, location_readings, last_updates
 		output = {"date" => date.to_s}
 		location_data = []
 		
@@ -14,7 +14,7 @@ module PostcodeReadingsJson
 			loc_hash["id"] = loc.name
 			loc_hash["lat"] = loc.position.latitude.to_s
 			loc_hash["lon"] = loc.position.longitude.to_s
-			loc_hash["last_update"] = "null" #last_updates[loc].to_s
+			loc_hash["last_update"] = last_updates[loc].to_s
 
 			measurements = []
 			

@@ -2,6 +2,11 @@ Rails.application.routes.draw do
   get 'weather/locations' 
   get 'weather/data/:id/:date', to: 'weather#data'
 
+
+  # Need to allow for decimal points in latitude and longitude values
+  get 'weather/prediction/:lat/:long/:period', to: 'weather#predict', :constraints => { :lat => /[^\/]*/, :long => /[^\/]*/ }
+  get 'weather/prediction/:postcode/:period', to: 'weather#postcode_predict'
+
   # Only temporary:
   get 'weather/postcode_data'
   
