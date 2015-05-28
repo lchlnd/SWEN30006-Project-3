@@ -2,7 +2,7 @@
 
 <h1>Basic HomePage</h1>
 
-<%= form_tag("/weather/location", method: "get", class: "typeahead") do %>
+<%= form_tag("/weather/location", method: "get", class: "form-group") do %>
 	<%= label_tag(:id, "Search for Station:") %>
 	<%= text_field_tag(:id) %>
 	<%= submit_tag("Search") %>
