@@ -4,12 +4,19 @@ class WeatherController < ApplicationController
 	include PostcodeReadingsJson
 
 	def locations
+
 		@locations = Location.all
 		respond_to do |format|
 			format.html
 			# format.js probably not needed because we are not using any javascript
 			format.js
 			format.json {render json: build_locations(@locations, Date.today)}
+		end
+	end
+
+	def location
+		if params[:id]
+			@location = Location.find_by(name: params[:id])
 		end
 	end
 

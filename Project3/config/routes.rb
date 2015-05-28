@@ -1,9 +1,14 @@
 Rails.application.routes.draw do
-  get 'weather/locations' 
+  get 'weather/locations'
+
+  get 'weather/location'
+  get 'weather/location/:id', to: 'weather#location'
   get 'weather/data/:id/:date', to: 'weather#data'
 
   # Only temporary:
   get 'weather/postcode_data'
+
+  root 'weather#index'
   
 
   # The priority is based upon order of creation: first created -> highest priority.

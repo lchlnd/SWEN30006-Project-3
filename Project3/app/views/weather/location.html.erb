@@ -1,0 +1,30 @@
+<h1 class= page-header>Listing Location <%= @location.name %></h1>
+
+
+<table class= table>
+    <thead>
+    	<caption>Readings for <%=@location.name%></caption>
+     	<tr>
+       		<th> Location ID </th>
+       		<th> Latitude </th>
+        	<th> Longitude </th>
+        	<th> Last Update </th>
+      	</tr>
+    </thead>
+  
+    <tbody>
+            
+
+        <% @location.readings.each do |reading| %>
+          <tr>
+          	<td><%= reading.name %></td>
+          	<td><%= reading.position.latitude %></td>
+          	<td><%= reading.position.longitude %></td>
+          	<td><%= reading.updated_at %></td> 
+          </tr>
+        <% end %>
+     
+    </tbody>
+
+</table>
+
