@@ -1,5 +1,31 @@
-<html>
-<body>
-	Hello location data
-</body>
-</hello>
+<h1 class= page-header>Listing Data for <%= @location.name %></h1>
+
+<p>Date: <%= @date %></p>
+<p>Current Temperature: <%= @current_temp %></p>
+<p>Current Condition: <%= @current_cond %></p>
+
+<table class= table>
+    <thead>
+    	<caption>Measurements taken</caption>
+     	<tr>
+       		<th> Time </th>
+       		<th> Temperature </th>
+        	<th> Precip </th>
+        	<th> Wind Direction </th>
+          	<th> Wind Speed </th>
+      	</tr>
+    </thead>
+  
+    <tbody>
+      <% @date_readings.each do |reading| %>
+        <tr>
+        	<td><%= reading.created_at %></td>
+        	<td><%= reading.temperature.value %></td>
+        	<td><%= reading.rainfall.value %></td>
+        	<td><%= reading.wind_direction.value %></td> 
+          	<td><%= reading.wind_speed.value %></td> 
+        </tr>
+      <% end %>
+    </tbody>
+
+</table>
