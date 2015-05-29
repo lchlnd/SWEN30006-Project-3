@@ -85,12 +85,22 @@ class WeatherController < ApplicationController
 		end
 	end
 
-	def redirect_data
+	def redirect_location_data
 
-		@date = params[:location][:date]
 		@id = Location.find_by(:name => params[:location][:name])
-		
+		@date = params[:location][:date]
+
 		redirect_to :action => "data", :id => @id.id, :date => @date
 	end
+
+	def redirect_postcode_data
+
+		@id = Postcode.find_by(:code => params[:postcode][:code])
+		@date = params[:postcode][:date]
+
+		redirect_to :action => "data", :id => @id.code, :date => @date
+	end
+		
+
 
 end

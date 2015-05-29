@@ -1,10 +1,10 @@
 <h1 class= page-header>Search for Data via Location</h1>
 
 
-<%= form_for :location , :url => {:controller => 'weather', :action => 'redirect_data'}, method: :get do |l| %>
+<%= form_for :location , :url => {:controller => 'weather', :action => 'redirect_location_data'}, method: :get do |l| %>
   <p>
     <%= l.label 'Station Name' %><br />
-    <%= l.text_field :name ,class: "station_name form-control"  %>
+    <%= l.text_field :name , class: "station_name form-control"  %>
   </p>
   <p>
     <%= l.label 'Date:' %><br />

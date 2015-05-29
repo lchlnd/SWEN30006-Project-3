@@ -1,8 +1,45 @@
 <h1 class= page-header>Search for Data via Postcode</h1>
 
-<%= form_tag({controller: "weather", action: "redirect_data"}, method: "get") do %>
-	<%= label_tag(:l, "Search for Location:") %>
-  	<%= text_field_tag(:l) %>
-  	<%= submit_tag("Search") %>
 
+
+<%= form_for :postcode , :url => {:controller => 'weather', :action => 'redirect_postcode_data'}, method: :get do |l| %>
+  <p>
+    <%= l.label 'Postcode' %><br />
+    <%= l.text_field :code , class: "station_name form-control"  %>
+  </p>
+  <p>
+    <%= l.label 'Date:' %><br />
+    <%= l.date_field :date, order: [:year, :month, :day ], date_separator: "-",class: "form-control" %>
+  </p>
+  <p> 
+  	<%= l.submit 'Search' %>
+  </p>
 <% end %>
+
+
+
+<script type="text/javascript">
+var num = [ 
+
+				// ----------- NEED MELA TO HELP WITH POSTCODE DATA --------------
+];
+  
+// Twitter typeahead example.
+
+// instantiate the bloodhound suggestion engine
+var numbers = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('num'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  local: num
+  
+});
+
+
+// initialize the bloodhound suggestion engine
+numbers.initialize();
+
+// instantiate the typeahead UI
+$('.station_name').typeahead(null, {
+  displayKey: 'num',
+  source: numbers.ttAdapter()
+});</script>
