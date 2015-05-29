@@ -154,4 +154,22 @@ class WeatherController < ApplicationController
 		end
 	end
 
+
+	def index
+		@average_temperature = []
+		
+		location = Location.find_by(:name =>"Melbourne Airport")
+
+		
+		tot_temp = 0.0
+		count    = 0.0
+		location.readings.where(:created_at=> Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).each do |reading|
+			@average_temperature << [reading.created_at,reading.temperature.value]
+		end
+		
+		
+	
+
+	end
+
 end
