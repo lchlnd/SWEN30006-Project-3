@@ -1,38 +1,4 @@
 <h1 class= page-header>Search for a station</h1>
 
 
-<% if params[:error] == "station_name" %>
-	<p class='warning text-center'>Please enter a station Name</p>
-	
-<%end%>
-<%= form_for :location , :url => {:controller => 'weather', :action => 'redirect_data'},placeholder: "Station Name", method: :get do |l| %>
-
-    <%= l.text_field :name, :placeholder => 'Please Enter Station Name', :class => 'form-control station_name' %>
-    <%= l.date_field :date, order: [:year, :month, :day ], date_separator: "-",placeholder: "Date (YYYY-MM-DD)", value: Time.now.strftime("%Y-%m-%d"), :class => 'form-control' %>
-  	<%= l.submit 'Search', :class => 'btn btn-primary' %>
-<% end %>
-
-
-<script type="text/javascript">
-var num = [ { num: 'Charlton' }, { num: 'Hopetoun Airport' }, { num: 'Kerang' }, { num: 'Mildura' }, { num: 'Ouyen' }, { num: 'Swan Hill' }, { num: 'Walpeup RS' }, { num: 'Edenhope' }, { num: 'Horsham' }, { num: 'Kanagulk' }, { num: 'Longerenong' }, { num: 'Nhill Aerodrome' }, { num: 'Stawell' }, { num: 'Warracknabeal' }, { num: 'Ararat' }, { num: 'Ben Nevis' }, { num: 'Cape Nelson' }, { num: 'Cape Otway' }, { num: 'Casterton' }, { num: 'Dartmoor' }, { num: 'Hamilton' }, { num: 'Mortlake' }, { num: 'Mount Gellibrand' }, { num: 'Mount William' }, { num: 'Port Fairy' }, { num: 'Portland Airport' }, { num: 'Portland Harbour' }, { num: 'Warrnambool' }, { num: 'Westmere' }, { num: 'Aireys Inlet' }, { num: 'Avalon' }, { num: 'Ballarat' }, { num: 'Bundoora' }, { num: 'Cerberus' }, { num: 'Coldstream' }, { num: 'Cranbourne' }, { num: 'Essendon Airport' }, { num: 'Fawkner Beacon' }, { num: 'Ferny Creek' }, { num: 'Frankston' }, { num: 'Geelong Racecourse' }, { num: 'Laverton' }, { num: 'Melbourne Airport' }, { num: 'Melbourne (Olympic Park)' }, { num: 'Moorabbin Airport' }, { num: 'Phillip Island' }, { num: 'Point Wilson' }, { num: 'Pound Creek' }, { num: 'Rhyll' }, { num: 'Scoresby' }, { num: 'Sheoaks' }, { num: 'South Channel Island' }, { num: 'St Kilda Harbour RMYS' }, { num: 'Viewbank' }, { num: 'Wonthaggi' }, { num: 'Bendigo' }, { num: 'Echuca' }, { num: 'Kyabram' }, { num: 'Mangalore' }, { num: 'Redesdale' }, { num: 'Shepparton' }, { num: 'Strathbogie' }, { num: 'Tatura' }, { num: 'Yarrawonga' }, { num: 'Albury' }, { num: 'Benalla' }, { num: 'Corryong Airport' }, { num: 'Falls Creek' }, { num: 'Hunters Hill' }, { num: 'Lake Dartmouth' }, { num: 'Mount Buller' }, { num: 'Mount Hotham Airport' }, { num: 'Mount Hotham AWS' }, { num: 'Rutherglen RS' }, { num: 'Wangaratta' }, { num: 'Castlemaine' }, { num: 'Eildon Fire Tower' }, { num: 'Kilmore Gap' }, { num: 'Lake Eildon' }, { num: 'Maryborough' }, { num: 'East Sale' }, { num: 'Hogan Island' }, { num: 'Latrobe Valley' }, { num: 'Mount Baw Baw' }, { num: 'Mount Moornapa' }, { num: 'Warragul (Nilma North)' }, { num: 'Willow Grove' }, { num: 'Wilsons Promontory' }, { num: 'Yanakie' }, { num: 'Yarram Airport' }, { num: 'Bairnsdale' }, { num: 'Combienbar' }, { num: 'Gabo Island' }, { num: 'Gelantipy' }, { num: 'Kingfish B' }, { num: 'Lakes Entrance' }, { num: 'Mallacoota' }, { num: 'Mount Nowa Nowa' }, { num: 'Omeo' }, { num: 'Orbost' }, { num: 'Point Hicks' }, { num: 'Victoria Point' }, { num: 'Barwon Downs' }, {num: 'apple'} 
-];
-  
-// Twitter typeahead example.
-
-// instantiate the bloodhound suggestion engine
-var numbers = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('num'),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  local: num
-  
-});
-
-
-// initialize the bloodhound suggestion engine
-numbers.initialize();
-
-// instantiate the typeahead UI
-$('.station_name').typeahead(null, {
-  displayKey: 'num',
-  source: numbers.ttAdapter()
-});</script>
+<%= render 'form_location'%>

@@ -86,6 +86,8 @@ class WeatherController < ApplicationController
 
 		if(@id == nil)
 			redirect_to :action=> "find_location_data", :error => :station_name
+		elsif(@date == "")
+			redirect_to :action=> "find_location_data", :error => :date
 		else
 			redirect_to :action => "data", :id => @id.id, :date => @date
 		end
