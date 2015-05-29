@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get 'weather/location'
   get 'weather/location/:id', to: 'weather#location'
   get 'weather/data/:id/:date', to: 'weather#data'
+  get 'weather/data/:id/:period', to: 'weather#data'
 
 
   # Only temporary:

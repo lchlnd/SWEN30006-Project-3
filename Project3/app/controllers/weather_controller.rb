@@ -68,24 +68,8 @@ class WeatherController < ApplicationController
 		end
 	end
 
-	def find_postcode_data
 
-		
-	end
 
-	def find_location_data
-
-		@locations = Location.all
-
-	end
-
-	def find_location_pred_data
-
-	end
-
-	def find_postdoce_pred_data
-
-	end
 
 	def redirect_location_data
 
@@ -136,10 +120,18 @@ class WeatherController < ApplicationController
 
 	def redirect_postcode_data
 
-		@id = Postcode.find_by(:code => params[:postcode][:code])
+		@postcode = Postcode.find_by(:code => params[:postcode][:code])
 		@date = params[:postcode][:date]
 
-		redirect_to :action => "data", :id => @id.code, :date => @date
+		if(@postcode == nil)
+			redirect_to :action=> "find_postcode_data", :error=> :postcode
+		elsif(@date == "")
+			redirect_to :action=> "find_postcode_data",  :error => :date
+		else
+			redirect_to :action => "data", :id => @postcode.code, :date => @date
+		end
+
+		
 	end
 
 	def redirect_location_pred
@@ -148,17 +140,23 @@ class WeatherController < ApplicationController
 		@long = params[:location][:longitude]
 		@period = params[:location][:period]
 
+		
+
 		redirect_to :action => "predict", :lat => @lat, :long => @long, :period => @period
 	end
 
 	def redirect_postcode_pred
 
-		@postcode = params[:postcode][:postcode]
+		@postcode = Postcode.find_by(:code => params[:postcode][:code])
 		@period = params[:postcode][:period]
 
-		redirect_to :action => "postcode_predict", :postcode => @postcode, :period => @period
+		if(@postcode == nil)
+			redirect_to :action=> "find_postcode_pred_data", :error=> :postcode
+		elsif(@period == "")
+			redirect_to :action=> "find_postcode_pred_data",  :error => :period
+		else
+			redirect_to :action => "data", :id => @postcode.code, :period => @period.to_i
+		end
 	end
-		
-
 
 end

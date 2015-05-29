@@ -23,7 +23,7 @@ th{
 }
 
 form{
-	position: absolute;
+	
 	left: 30%;
 	text-align: center;
 }
@@ -44,4 +44,9 @@ form{
 
 #bloodhoundOverwrite {
 	vertical-align: middle !important;
+}
+
+.post_code.form-control.tt-hint.tt-input{
+	position: absolute !important;
+	
 }

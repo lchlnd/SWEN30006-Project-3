@@ -1,0 +1,17 @@
+
+
+<% if params[:error] == "latitude" %>
+  <p class='warning text-center'>Please enter a latitude</p>
+<%elsif params[:error] == "longitude" %>
+  <p class='warning text-center'>Please enter a longitude</p>
+<%elsif params[:error] == "period" %>
+  <p class='warning text-center'>Please enter a Time Period, eg 10 minutes</p>
+<%end%>
+
+
+<%= form_for :location , :url => {:controller => 'weather', :action => 'redirect_location_pred'}, method: :get do |l| %>
+    <%= l.text_field :latitude , placeholder: "Latitude, 51.5",:class=> "form-control"  %>
+    <%= l.text_field :longitude , placeholder: "Longitude, -0.13", :class=> "form-control"  %>
+    <%= l.text_field :period ,placeholder: "Time Period in minutes", :class=> "form-control"  %>
+  	<%= l.submit 'Search', :class=> "btn btn-primary" %>
+<% end %>
