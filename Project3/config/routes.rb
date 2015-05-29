@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   get 'weather/find_postcode_data'
   get 'weather/find_location_data'
 
+  get 'weather/redirect_data'
+
   
 
 

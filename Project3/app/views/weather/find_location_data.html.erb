@@ -1,13 +1,18 @@
 <h1 class= page-header>Search for Data via Location</h1>
 
-<form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Location">
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="YYYY-MM-DD">
-        </div>
-        <%= button_to "Submit", :controller => "weather", :action => "locations"%>
-</form>
+
+<%= form_for :location , :url => {:controller => 'weather', :action => 'redirect_data'}, method: :get do |l| %>
+  <p>
+    <%= l.label 'Location ID:' %><br />
+    <%= l.text_field :id %>
+  </p>
+  <p>
+    <%= l.label 'Date:' %><br />
+    <%= l.date_field :date, order: [:year, :month, :day ], date_separator: "-" %>
+  </p>
+  <p> 
+  	<%= l.submit 'Search' %>
+  </p>
+<% end %>
 
 
