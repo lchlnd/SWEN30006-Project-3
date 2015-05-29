@@ -3,6 +3,7 @@ class WeatherController < ApplicationController
 	include LocationReadingsJson
 	include PostcodeReadingsJson
 
+	# get 'weather/locations' 
 	def locations
 
 		@locations = Location.all
@@ -14,8 +15,7 @@ class WeatherController < ApplicationController
 		end
 	end
 
-	
-
+	# get 'weather/data/:id/:date'
 	def data
 		@date = Date.parse(params[:date])
 		@date_readings = []
@@ -54,16 +54,17 @@ class WeatherController < ApplicationController
 				end
 				puts "In locations loop"
 
-				#@last_updates[l] = readings.order("created_at").last.created_at
+				@last_updates[l] = readings.order("created_at").last.created_at
 			end
 
 			respond_to do |format|
 				format.html {render "postcode_data"}
 				format.js
-				format.json {render json: build_postcode_readings(@date, @location_readings)}#, @last_updates)}
+				format.json {render json: build_postcode_readings(@date, @location_readings, @last_updates)}
 			end
 		else
-			render "Error - invalid location/postcode id"
+			# Need a way to return an error message if the user enters an invalid location_id or postcode
+			#render "Error - invalid location/postcode id"
 		end
 	end
 
@@ -77,8 +78,6 @@ class WeatherController < ApplicationController
 
 	def find_location_data
 
-		@locations = Location.all
-
 		respond_to do |format|
 
 			format.html {render "find_location_data"}
@@ -91,6 +90,39 @@ class WeatherController < ApplicationController
 		@date = params[:location][:date]
 
 		redirect_to :action => "data", :id => @id.id, :date => @date
+	end
+
+	# get 'weather/prediction/:lat/:long/:period'
+	def predict
+		if (@pos = Position.find_by(:latitude => params[:lat], :longitude => params[:long])) == nil
+			@pos = Position.create(:latitude => params[:lat], :longitude => params[:long])
+		end
+		@prediction_data = {"latitude" => @pos.latitude, "longitude" => @pos.longitude}
+		@prediction_data["predictions"] = Predictor.create @pos, params[:period]
+
+		respond_to do |format|
+			format.html
+			format.js
+			format.json {render json: @prediction_data}
+		end
+	end
+
+	# get 'weather/prediction/:postcode/:period'
+	def postcode_predict
+
+		if (@postcode = Postcode.find_by_code(params[:postcode])) == nil
+			return :error
+		end
+		
+		@prediction_data = {"postcode" => params[:postcode]}
+		@prediction_data["predictions"] = Predictor.create  @postcode.position, params[:period]
+
+		respond_to do |format|
+			format.html
+			format.js
+			format.json {render json: @prediction_data}
+		end
+
 	end
 
 	def redirect_postcode_data

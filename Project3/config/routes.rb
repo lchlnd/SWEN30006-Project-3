@@ -16,7 +16,11 @@ Rails.application.routes.draw do
   get 'weather/redirect_location_data'
   get 'weather/redirect_postcode_data'
 
-  
+ 
+  # Need to allow for decimal points in latitude and longitude values
+  get 'weather/prediction/:lat/:long/:period', to: 'weather#predict', :constraints => { :lat => /[^\/]*/, :long => /[^\/]*/ }
+  get 'weather/prediction/:postcode/:period', to: 'weather#postcode_predict'
+
 
 
   # The priority is based upon order of creation: first created -> highest priority.

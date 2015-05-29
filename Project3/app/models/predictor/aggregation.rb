@@ -1,5 +1,6 @@
 class Aggregation
   EPSILON = 0.0001
+<<<<<<< HEAD
   TYPES = %w{rainfall wind_direction wind_speed temperature}
 
 
@@ -16,15 +17,20 @@ class Aggregation
 
     # Calculate weights for each location
     weights = Hash.new
+
     location_distances.each { |k, v| weights[k] = (v >= EPSILON ? 1/v : 1/EPSILON)  }
+
+    # Sum the weights
     sum_weights = 0
     weights.each { |k, v| sum_weights += v }
 
     # Aggregate for each value type
     results = Hash.new
+
     TYPES.each do |type|
       results[type] = aggregate(time_hash, sum_weights, weights, type)
     end
+
 
     return results
   end
@@ -33,7 +39,8 @@ class Aggregation
   # @param longitude Longitude coordinate of point of interest
   # @param num Number of stations to return
   # @return Hash in form of {location_id => distance}
-  def self.get_station_distances(latitude, longitude, num)
+  def self.get_station_distances(latitude, longitude)
+
     all_stations = Hash.new
 
     # Get each distance
@@ -47,7 +54,7 @@ class Aggregation
     # Get five closest
     results = Hash.new
 
-    Hash[Array(all_stations)[0..num-1]].each_pair do |id, dist|
+    Hash[Array(all_stations)[0..4]].each_pair do |id, dist|
       results[id] = dist
     end
     return results
@@ -85,6 +92,8 @@ class Aggregation
   # @param weights Hash in form of {location_id => weight ...}
   # @param type Type of data to aggregate
   def self.aggregate(time_hash, sum_weights, weights, type)
+
+    # Hash for results
     results = Hash.new
 
     # Want to get one data value for each time stamp
