@@ -55,9 +55,7 @@ class Regression
 		x_data = xvals.map { |x_i| (0..degree).map{ |pow| (x_i**pow).to_f } }
 		mx = Matrix[*x_data]
 		my = Matrix.column_vector(yvals)
-
 		temp = mx.t * mx
-
 		coefficients = (temp.inv * mx.t * my).transpose.to_a[0]
 	end
 
@@ -65,12 +63,11 @@ class Regression
 	#Takes an array of x values and an array of corresponding y values and applies a polynomial
 	# regression of each degree between 1 and 10 (inclusive), printing the equation with the best fit. 
 	def self.polynomial xvals, yvals
-
-		
 		
 		best_r2 = -Float::MAX
 		#Find the polynomial which gives the lowest variance.
 		for deg in (2..10)
+
 			coefficients = poly_regress(xvals, yvals, deg)
 			func = Proc.new{ |x| coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
 			r2 = r_squared(xvals, yvals, func)

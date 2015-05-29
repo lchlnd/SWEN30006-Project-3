@@ -76,7 +76,7 @@ namespace :weather do
       if last_reading
         last_reading_time = last_reading.timestamp.to_time
         if (last_reading_time - 9.hours).to_date == (observation_time - 9.hours).to_date
-          rainfall = last_reading.rainfall
+          rainfall = last_reading.rainfall.value
         end
       end
 
