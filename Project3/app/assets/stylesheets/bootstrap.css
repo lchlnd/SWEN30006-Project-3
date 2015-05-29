@@ -2546,6 +2546,7 @@ output {
   color: #555;
 }
 .form-control {
+  margin-top:10px;
   display: inline-block;
   vertical-align: middle;
   width: auto;
@@ -2991,6 +2992,7 @@ select[multiple].form-group-lg .form-control {
   }
 }
 .btn {
+  margin-top:10px;
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
