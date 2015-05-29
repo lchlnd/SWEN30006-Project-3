@@ -1,7 +1,7 @@
 require 'aggregation.rb'
 require 'regression.rb'
 class Predictor
-
+	EPSILON = 0.001
 	SECPERMIN = 60
 
 	# Creates predictions for all data types for the given position and saves them in the database, as well as returning a 
@@ -9,13 +9,12 @@ class Predictor
 	def self.create position, period
 
 		aggregated_data = Aggregation.build_aggregate_hash position.latitude, position.longitude
-		time_reference = aggregated_data["wind_speed"].first.first.to_f - 4
-
+		time_reference = aggregated_data["wind_speed"].first.first.to_f
 		# Regress aggregated rainfall data
 		rain_times = []
 		raining = :false
 		aggregated_data["rainfall"].each_pair do |t, rainfall|
-			if rainfall != 0
+			if rainfall > EPSILON
 				raining = :true
 			end
 			rain_times << t.to_f - time_reference
@@ -25,6 +24,7 @@ class Predictor
 			puts "raining = true"
 			puts rain_hash
 		else
+			puts "raining = false"
 			rain_hash = {:function => lambda{|x| 0}, :r2 => 1.0}
 		end
 		rain_vals = get_values rain_hash[:function], period, time_reference

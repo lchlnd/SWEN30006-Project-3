@@ -15,10 +15,8 @@ class Regression
 		tmp ={}
 		#poly_nom
 		tmp = polynomial( xvals , yvals)
-		if( tmp[:r2] > best_r2 )
-			info = tmp
-			best_r2 = tmp[:r2]
-		end
+		info = tmp
+		best_r2 = tmp[:r2]
 		puts "poly: #{tmp}"
 		#linear
 		tmp = linear( xvals , yvals)
@@ -51,7 +49,7 @@ class Regression
 	# => 'Getting to Grips with Ruby'
 	# => Author: Mat Blair
 	def self.poly_regress xvals, yvals, degree 
-		
+
 		x_data = xvals.map { |x_i| (0..degree).map{ |pow| (x_i**pow).to_f } }
 		mx = Matrix[*x_data]
 		my = Matrix.column_vector(yvals)
@@ -63,10 +61,13 @@ class Regression
 	#Takes an array of x values and an array of corresponding y values and applies a polynomial
 	# regression of each degree between 1 and 10 (inclusive), printing the equation with the best fit. 
 	def self.polynomial xvals, yvals
-		
-		best_r2 = -Float::MAX
+		puts yvals
 		#Find the polynomial which gives the lowest variance.
-		for deg in (2..10)
+		best_coefficients = poly_regress(xvals, yvals, 2)
+		best_func = Proc.new{ |x| best_coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
+		best_r2 = r_squared(xvals, yvals, best_func)
+
+		for deg in (3..10)
 
 			coefficients = poly_regress(xvals, yvals, deg)
 			func = Proc.new{ |x| coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
@@ -82,10 +83,11 @@ class Regression
 				best_func = lambda { |x| best_coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
 			end
 		end
+		puts "best function = #{best_func}"
+
 
 
 		info = {:function => best_func, :r2 => best_r2}
-
 		#Convert the polynomial into a string.  Do not include a term if its coefficient is less than or equal to EPS (=0.005), 
 		# unless it is the coefficient of the highest order term.
 		# poly_string = ""
@@ -112,11 +114,8 @@ class Regression
 		a = coefficients[1]
 		b = coefficients[0]
 
-		
-		#puts "%.2fx %c %.2f" % [a, b >= 0 ? '+' : '-', b.abs]
 		func = lambda { |x| a*x + b }
 		r2 = r_squared(xvals, yvals, func)
-		#puts "R squared = #{r2}"
 
 		info = {:function => func, :r2 => r2}
 	end
@@ -139,11 +138,10 @@ class Regression
 		b = b.round(2)
 
 		coefficients = [a,b]
-		#puts "%.2f*ln(x) %c %.2f" % [b, a>=0 ? '+' : '-', a.abs]
+
 		func = lambda { |x| b*Math.log(x) + a}
 
 		r2 = r_squared(xvals, yvals, func)
-		#puts "R squared = #{r2}"
 
 		info = {:function => func, :r2 => r2}
 
@@ -164,10 +162,10 @@ class Regression
 		a = Math.exp((sum_ln_y*sum_x2 - sum_x*sum_x_ln_y)/(n*sum_x2 - sum_x**2)).round(2)
 		b = (n*sum_x_ln_y - sum_x*sum_ln_y)/(n*sum_x2 - sum_x**2).round(2)
 		coefficients = [a,b]
-		#puts "%.2f*e^%.2fx" % [a, b]
+
 		func = lambda { |x| a*Math.exp(b*x) }
 		r2 = r_squared(xvals, yvals, func) 
-		#puts "R squared = #{r2}"
+
 		info = {:function => func, :r2 => r2}
 	end
 
