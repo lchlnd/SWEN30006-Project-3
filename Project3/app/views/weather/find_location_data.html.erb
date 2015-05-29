@@ -1,20 +1,16 @@
-<h1 class= page-header>Search for Data via Location</h1>
+<h1 class= page-header>Search for a station</h1>
 
 
-<%= form_for :location , :url => {:controller => 'weather', :action => 'redirect_data'}, method: :get do |l| %>
-  <p>
-    <%= l.label 'Station Name' %><br />
-    <%= l.text_field :name ,class: "station_name form-control"  %>
-  </p>
-  <p>
-    <%= l.label 'Date:' %><br />
-    <%= l.date_field :date, order: [:year, :month, :day ], date_separator: "-",class: "form-control" %>
-  </p>
-  <p> 
-  	<%= l.submit 'Search' %>
-  </p>
+<% if params[:error] == "station_name" %>
+	<p class='warning text-center'>Please enter a station Name</p>
+	
+<%end%>
+<%= form_for :location , :url => {:controller => 'weather', :action => 'redirect_data'},placeholder: "Station Name", method: :get do |l| %>
+
+    <%= l.text_field :name, :placeholder => 'Please Enter Station Name', :class => 'form-control station_name' %>
+    <%= l.date_field :date, order: [:year, :month, :day ], date_separator: "-",placeholder: "Date (YYYY-MM-DD)", value: Time.now.strftime("%Y-%m-%d"), :class => 'form-control' %>
+  	<%= l.submit 'Search', :class => 'btn btn-primary' %>
 <% end %>
-
 
 
 <script type="text/javascript">

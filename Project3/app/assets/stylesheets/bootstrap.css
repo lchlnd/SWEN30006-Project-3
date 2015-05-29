@@ -2546,8 +2546,9 @@ output {
   color: #555;
 }
 .form-control {
-  display: block;
-  width: 100%;
+  display: inline-block;
+  vertical-align: text-top;
+  width: auto;
   height: 34px;
   padding: 6px 12px;
   font-size: 14px;
@@ -3089,6 +3090,7 @@ fieldset[disabled] .btn-default.active {
   background-color: #333;
 }
 .btn-primary {
+  vertical-align: top;
   color: #fff;
   background-color: #337ab7;
   border-color: #2e6da4;

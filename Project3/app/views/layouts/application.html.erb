@@ -5,6 +5,8 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+
+  <style href="assets/stylesheets/weather.scss"> </style>
 </head>
 <body>
 
@@ -49,32 +51,3 @@
 </body>
 </html>
 
-
-
-
-
-
-
-<script type="text/javascript">
-var num = [ { num: 'Charlton' }, { num: 'Hopetoun Airport' }, { num: 'Kerang' }, { num: 'Mildura' }, { num: 'Ouyen' }, { num: 'Swan Hill' }, { num: 'Walpeup RS' }, { num: 'Edenhope' }, { num: 'Horsham' }, { num: 'Kanagulk' }, { num: 'Longerenong' }, { num: 'Nhill Aerodrome' }, { num: 'Stawell' }, { num: 'Warracknabeal' }, { num: 'Ararat' }, { num: 'Ben Nevis' }, { num: 'Cape Nelson' }, { num: 'Cape Otway' }, { num: 'Casterton' }, { num: 'Dartmoor' }, { num: 'Hamilton' }, { num: 'Mortlake' }, { num: 'Mount Gellibrand' }, { num: 'Mount William' }, { num: 'Port Fairy' }, { num: 'Portland Airport' }, { num: 'Portland Harbour' }, { num: 'Warrnambool' }, { num: 'Westmere' }, { num: 'Aireys Inlet' }, { num: 'Avalon' }, { num: 'Ballarat' }, { num: 'Bundoora' }, { num: 'Cerberus' }, { num: 'Coldstream' }, { num: 'Cranbourne' }, { num: 'Essendon Airport' }, { num: 'Fawkner Beacon' }, { num: 'Ferny Creek' }, { num: 'Frankston' }, { num: 'Geelong Racecourse' }, { num: 'Laverton' }, { num: 'Melbourne Airport' }, { num: 'Melbourne (Olympic Park)' }, { num: 'Moorabbin Airport' }, { num: 'Phillip Island' }, { num: 'Point Wilson' }, { num: 'Pound Creek' }, { num: 'Rhyll' }, { num: 'Scoresby' }, { num: 'Sheoaks' }, { num: 'South Channel Island' }, { num: 'St Kilda Harbour RMYS' }, { num: 'Viewbank' }, { num: 'Wonthaggi' }, { num: 'Bendigo' }, { num: 'Echuca' }, { num: 'Kyabram' }, { num: 'Mangalore' }, { num: 'Redesdale' }, { num: 'Shepparton' }, { num: 'Strathbogie' }, { num: 'Tatura' }, { num: 'Yarrawonga' }, { num: 'Albury' }, { num: 'Benalla' }, { num: 'Corryong Airport' }, { num: 'Falls Creek' }, { num: 'Hunters Hill' }, { num: 'Lake Dartmouth' }, { num: 'Mount Buller' }, { num: 'Mount Hotham Airport' }, { num: 'Mount Hotham AWS' }, { num: 'Rutherglen RS' }, { num: 'Wangaratta' }, { num: 'Castlemaine' }, { num: 'Eildon Fire Tower' }, { num: 'Kilmore Gap' }, { num: 'Lake Eildon' }, { num: 'Maryborough' }, { num: 'East Sale' }, { num: 'Hogan Island' }, { num: 'Latrobe Valley' }, { num: 'Mount Baw Baw' }, { num: 'Mount Moornapa' }, { num: 'Warragul (Nilma North)' }, { num: 'Willow Grove' }, { num: 'Wilsons Promontory' }, { num: 'Yanakie' }, { num: 'Yarram Airport' }, { num: 'Bairnsdale' }, { num: 'Combienbar' }, { num: 'Gabo Island' }, { num: 'Gelantipy' }, { num: 'Kingfish B' }, { num: 'Lakes Entrance' }, { num: 'Mallacoota' }, { num: 'Mount Nowa Nowa' }, { num: 'Omeo' }, { num: 'Orbost' }, { num: 'Point Hicks' }, { num: 'Victoria Point' }, { num: 'Barwon Downs' }, {num: 'apple'} 
-];
-  
-// Twitter typeahead example.
-
-// instantiate the bloodhound suggestion engine
-var numbers = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('num'),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  local: num
-  
-});
-
-
-// initialize the bloodhound suggestion engine
-numbers.initialize();
-
-// instantiate the typeahead UI
-$('#id').typeahead(null, {
-  displayKey: 'num',
-  source: numbers.ttAdapter()
-});</script>

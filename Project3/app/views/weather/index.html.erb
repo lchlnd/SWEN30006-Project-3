@@ -1,24 +1,17 @@
+<h1 class= page-header>Welcome to Rooby Weather!</h1>
 
-<div class="row col-sm-12">
-	<h1>Basic HomePage</h1>
-</div>
-<div class="row col-sm-12">
-	<%= form_tag "/weather/location", method: "get" do%>
-		<div class="form-group custom-form-group">
-			
-			<%= text_field( :id, :station_form,   class: 'form-control',placeholder: 'Station Name')%>
-			<%= date_select( :number, :date,  class: 'form-control')%>
-			<%= submit_tag("search") %>
-		</div>
-	<%end%>
-</div>
+<p class="text-center">Please search for a station</p>
 
-<div class="row col-sm-12">
-	[<% Location.all.each do |l| %>
-		<%=" name:  '#{l.name}' , num:  '#{l.id} ' " %>
-	<%end%>]
-</div>
+<% if params[:error] == "station_name" %>
+	<p class='warning text-center'>Please enter a station Name</p>
+	
+<%end%>
+<%= form_for :location , :url => {:controller => 'weather', :action => 'redirect_data'},placeholder: "Station Name", method: :get do |l| %>
 
+    <%= l.text_field :name, :placeholder => 'Please Enter Station Name', :class => 'form-control station_name' %>
+    <%= l.date_field :date, order: [:year, :month, :day ], date_separator: "-",placeholder: "Date (YYYY-MM-DD)", value: Time.now.strftime("%Y-%m-%d"), :class => 'form-control' %>
+  	<%= l.submit 'Search', :class => 'btn btn-primary' %>
+<% end %>
 
 
 <script type="text/javascript">
@@ -40,7 +33,7 @@ var numbers = new Bloodhound({
 numbers.initialize();
 
 // instantiate the typeahead UI
-$('#id_station_form').typeahead(null, {
+$('.station_name').typeahead(null, {
   displayKey: 'num',
   source: numbers.ttAdapter()
 });</script>

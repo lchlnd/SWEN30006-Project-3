@@ -21,7 +21,7 @@ class WeatherController < ApplicationController
 		@date_readings = []
 
 		if (@location = Location.find_by_id params[:id].to_i) != nil
-			@readings = Reading.where(:location_id => @location.id)
+			@readings = Reading.where(:location_id => @location.id, :created_at => @date.beginning_of_day..@date.end_of_day)
 			@readings.each do |r|
 				if r.created_at.to_date == @date
 					@date_readings << r
@@ -69,28 +69,26 @@ class WeatherController < ApplicationController
 
 	def find_postcode_data
 
-		respond_to do |format|
-
-			format.html {render "find_postcode_data"}
-		end
+		
 	end
 
 	def find_location_data
 
 		@locations = Location.all
 
-		respond_to do |format|
-
-			format.html {render "find_location_data"}
-		end
+		
 	end
 
 	def redirect_data
 
 		@date = params[:location][:date]
 		@id = Location.find_by(:name => params[:location][:name])
-		
-		redirect_to :action => "data", :id => @id.id, :date => @date
+
+		if(@id == nil)
+			redirect_to :action=> "find_location_data", :error => :station_name
+		else
+			redirect_to :action => "data", :id => @id.id, :date => @date
+		end
 	end
 
 end
