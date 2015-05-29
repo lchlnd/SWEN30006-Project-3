@@ -66,8 +66,6 @@ class WeatherController < ApplicationController
 
 	def find_postcode_data
 
-		@locations = Location.all
-
 		respond_to do |format|
 
 			format.html {render "find_postcode_data"}
@@ -76,10 +74,20 @@ class WeatherController < ApplicationController
 
 	def find_location_data
 
+		@locations = Location.all
+
 		respond_to do |format|
 
 			format.html {render "find_location_data"}
 		end
+	end
+
+	def redirect_data
+
+		@date = params[:location][:date]
+		@id = params[:location][:id]
+
+		redirect_to :action => "data", :id => @id, :date => @date
 	end
 
 end

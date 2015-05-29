@@ -1,13 +1,8 @@
 <h1 class= page-header>Search for Data via Postcode</h1>
 
-<form id="bar1" class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Postcode">
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="YYYY-MM-DD">
-        </div>
-        <%= button_to "Submit", :controller => "weather", :action => "locations"%>
-</form>
+<%= form_tag({controller: "weather", action: "redirect_data"}, method: "get") do %>
+	<%= label_tag(:l, "Search for Location:") %>
+  	<%= text_field_tag(:l) %>
+  	<%= submit_tag("Search") %>
 
-
+<% end %>
