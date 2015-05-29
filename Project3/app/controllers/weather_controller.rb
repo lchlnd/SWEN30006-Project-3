@@ -22,19 +22,14 @@ class WeatherController < ApplicationController
 
 		if (@location = Location.find_by_id params[:id].to_i) != nil
 			@readings = Reading.where(:location_id => @location.id, :created_at => @date.beginning_of_day..@date.end_of_day)
-			@readings.each do |r|
-				if r.created_at.to_date == @date
-					@date_readings << r
-				end
-			end
+
 			@current_temp = 20
 			@current_cond = "sunny"
-			puts "Hello"
-			puts @date_readings
+			
 			respond_to do |format|
 				format.html {render "location_data"}
 				format.js
-				format.json {render json: build_location_readings(@date_readings, @date, @current_temp, @current_cond)}
+				format.json {render json: build_location_readings(@readings, @date, @current_temp, @current_cond)}
 			end
 		elsif (@postcode = Postcode.find_by_code params[:id].to_i) != nil
 
@@ -140,7 +135,7 @@ class WeatherController < ApplicationController
 		@long = params[:location][:longitude]
 		@period = params[:location][:period]
 
-		
+
 
 		redirect_to :action => "predict", :lat => @lat, :long => @long, :period => @period
 	end

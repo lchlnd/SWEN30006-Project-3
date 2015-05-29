@@ -1,14 +1,14 @@
 
 
 <% if params[:error] == "postcode" %>
-  <p class='warning text-center'>Please enter a Postcode</p>
+  <p class='warning text-center'>Sorry, Please enter a Postcode</p>
 <%elsif params[:error] == "period" %>
-  <p class='warning text-center'>Please enter a valid Period, ei 10</p>
+  <p class='warning text-center'>Sorry, Please enter a valid Period, ei 10</p>
 <%end%>
 
 
 <%= form_for :postcode , :url => {:controller => 'weather', :action => 'redirect_postcode_pred'},method: :get do |l| %>
-    <%= l.text_field :code ,:id=>'bloodhoundOverwrite', :class=> "post_code form-control", placeholder: "Postcode (eg. 3002)"  %>
+    <%= l.text_field :code ,:id=>'bloodhoundOverwrite', :class=> "post_code form-control", placeholder: "Postcode (3000-3999)"  %>
     <%= l.text_field :period ,placeholder: "Time Period in minutes",:class=> "form-control" %>
   	<%= l.submit 'Search', :class => "btn btn-primary" %>
 <% end %>

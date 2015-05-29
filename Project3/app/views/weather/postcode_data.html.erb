@@ -1,13 +1,16 @@
-<h1 class= page-header>Listing Data for Postcode: <%= @postcode.code %></h1>
+<h1 class= page-header>Postcode - <%= @postcode.code %></h1>
 
 <p>Date: <%= @date %></p>
+
+
+
 
 <% @locations.each do |location| %>
 	
 	<table class= table>
 
 		<thead>
-    	<caption>ID: <%= location.name %>. Lat: <%= location.position.latitude %>, Lon: <%= location.position.longitude %></caption>
+    	<caption> <b>Station: <%= location.name %>. Lat: <%= location.position.latitude %>, Lon: <%= location.position.longitude %></b></caption>
      		<tr>
      			<th> Time </th>
        			<th> Temperature </th>
@@ -18,15 +21,19 @@
    		</thead>
 
     	<tbody>
-     		<% @location_readings[location].each do |reading| %>
-        	<tr>
-        		<td><%= reading.created_at %></td>
-        		<td><%= reading.temperature.value %></td>
-        		<td><%= reading.rainfall.value %></td>
-        		<td><%= reading.wind_direction.value %></td> 
-          		<td><%= reading.wind_speed.value %></td> 
-        	</tr>
-      		<% end %>
+
+        <% @location_readings[location].each do |reading| %>
+          <tr>
+            <td><%= reading.created_at %></td>
+            <td><%= reading.temperature.value %></td>
+            <td><%= reading.rainfall.value %></td>
+            <td><%= reading.wind_direction.value %></td>
+            <td><%= reading.wind_speed.value.round(2) %></td>
+          </tr>
+     		
+            
+
+          <%end%>
     	</tbody>
 
 	</table>
