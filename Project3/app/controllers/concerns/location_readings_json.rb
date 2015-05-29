@@ -18,7 +18,4 @@ module LocationReadingsJson
 		output["measurements"] = measurements
 		return output
 	end
-
-		
-
 end

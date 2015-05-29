@@ -1,0 +1,20 @@
+<h1 class= page-header>Predicted Data for a Location</h1>
+
+
+<%= form_for :location , :url => {:controller => 'weather', :action => 'redirect_location_pred'}, method: :get do |l| %>
+  <p>
+    <%= l.label 'Latitude' %><br />
+    <%= l.text_field :latitude , class: "station_name form-control"  %>
+  </p>
+  <p>
+    <%= l.label 'Longitude' %><br />
+    <%= l.text_field :longitude , class: "station_name form-control"  %>
+  </p>
+  <p>
+    <%= l.label 'Period' %><br />
+    <%= l.text_field :period , class: "station_name form-control"  %>
+  </p>
+  <p> 
+  	<%= l.submit 'Search' %>
+  </p>
+<% end %>

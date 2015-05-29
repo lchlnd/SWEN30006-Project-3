@@ -1,0 +1,16 @@
+<h1 class= page-header>Predicted Data for a Postcode</h1>
+
+
+<%= form_for :postcode , :url => {:controller => 'weather', :action => 'redirect_postcode_pred'}, method: :get do |l| %>
+  <p>
+    <%= l.label 'Postcode' %><br />
+    <%= l.text_field :postcode , class: "station_name form-control"  %>
+  </p>
+  <p>
+    <%= l.label 'Period' %><br />
+    <%= l.text_field :period , class: "station_name form-control"  %>
+  </p>
+  <p> 
+  	<%= l.submit 'Search' %>
+  </p>
+<% end %>
