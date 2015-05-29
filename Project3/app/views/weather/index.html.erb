@@ -1,8 +1,11 @@
 <h1 class= page-header>Welcome to Rooby Weather!</h1>
 
+<%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
+
+
 <div class=" row col-md-12">
 
-	<h3 class="text-center"> A site to help you easily navigate victorian weather observations!</h3>
+	<h3 class="text-center"> A site to help you easily navigate Victorian weather observations!</h3>
 	<br>
 	<br><br>
 
@@ -25,6 +28,12 @@
 <div class="row ">
 	<br><br><br><br>
 	<h3 class="text-center">Victorian weather predictions made easy!</h3>
+
+	<br><br>
+
+	
+	<%= line_chart @average_temperature, id:"Average Temperature", height: "500px"%>
+	<h4 class="text-center">Melbourne Aiport Temperature &#8451;</h4>
 	<br><br><br><br>
 </div>
 
@@ -43,8 +52,4 @@
 	</div>
 </div>
 
-
-<div class="row">
-
-
-</div>
+<br><br><br><br><br><br><br><br>

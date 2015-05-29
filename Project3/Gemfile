@@ -29,7 +29,8 @@ gem "rufus-scheduler"
 
 
 gem 'bootstrap-typeahead-rails'
-# =======
+gem "chartkick"
+
 
 # gem 'twitter-typeahead-rails'
 
