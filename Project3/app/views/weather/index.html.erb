@@ -1,15 +1,20 @@
 
+<div class="row col-sm-12">
+	<h1>Basic HomePage</h1>
+</div>
+<div class="row col-sm-12">
+	<%= form_tag "/weather/location", method: "get" do%>
+		<div class="form-group custom-form-group">
+			<%= label :station, "Station"%>
+			<%= text_field( :id, :station_form,  class: 'form-control')%>
+			<%= submit_tag("search") %>
+		</div>
+	<%end%>
+</div>
 
-<h1>Basic HomePage</h1>
+<div class="row col-sm-12">
 
-<%= form_tag "/weather/location" do%>
-	<div class="form-group">
-		<%= label :station, "Station"%>
-		<%= text_field( :id, :station_form,  class: 'form-control')%>
-		<%= submit_tag("search") %>
-	</div>
-<%end%>
-
+</div>
 
 
 

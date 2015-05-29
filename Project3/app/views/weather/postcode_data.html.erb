@@ -1,5 +1,34 @@
-<html>
-<body>
-	Hello????
-</body>
-</html>
+<h1 class= page-header>Listing Data for Postcode: <%= @postcode.code %></h1>
+
+<p>Date: <%= @date %></p>
+
+<% @locations.each do |location| %>
+	
+	<table class= table>
+
+		<thead>
+    	<caption>ID: <%= location.name %>. Lat: <%= location.position.latitude %>, Lon: <%= location.position.longitude %></caption>
+     		<tr>
+     			<th> Time </th>
+       			<th> Temperature </th>
+        		<th> Precip </th>
+        		<th> Wind Direction </th>
+          		<th> Wind Speed </th>
+      		</tr>
+   		</thead>
+
+    	<tbody>
+     		<% @location_readings[location].each do |reading| %>
+        	<tr>
+        		<td><%= reading.created_at %></td>
+        		<td><%= reading.temperature.value %></td>
+        		<td><%= reading.rainfall.value %></td>
+        		<td><%= reading.wind_direction.value %></td> 
+          		<td><%= reading.wind_speed.value %></td> 
+        	</tr>
+      		<% end %>
+    	</tbody>
+
+	</table>
+
+<% end %>

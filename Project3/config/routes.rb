@@ -1,18 +1,27 @@
 Rails.application.routes.draw do
-  get 'weather/locations' 
+  get 'weather/locations'
+
+  get 'weather/location'
+  get 'weather/location/:id', to: 'weather#location'
   get 'weather/data/:id/:date', to: 'weather#data'
+
 
   # Only temporary:
   get 'weather/postcode_data'
-  
 
   root 'weather#index'
+
+  get 'weather/find_postcode_data'
+  get 'weather/find_location_data'
+
+  
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

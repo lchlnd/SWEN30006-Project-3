@@ -4,12 +4,20 @@ class WeatherController < ApplicationController
 	include PostcodeReadingsJson
 
 	def locations
+
 		@locations = Location.all
 		respond_to do |format|
 			format.html
 			# format.js probably not needed because we are not using any javascript
 			format.js
 			format.json {render json: build_locations(@locations, Date.today)}
+		end
+	end
+
+	def location
+		puts params
+		if params[:id]["station_form"]
+			@location = Location.find_by(name: params[:id]["station_form"])
 		end
 	end
 
@@ -26,10 +34,12 @@ class WeatherController < ApplicationController
 			end
 			@current_temp = 20
 			@current_cond = "sunny"
+			puts "Hello"
+			puts @date_readings
 			respond_to do |format|
 				format.html {render "location_data"}
 				format.js
-				format.json {render json: build_location_readings(@readings, @date, @current_temp, @current_cond)}
+				format.json {render json: build_location_readings(@date_readings, @date, @current_temp, @current_cond)}
 			end
 		elsif (@postcode = Postcode.find_by_code params[:id].to_i) != nil
 
@@ -62,31 +72,22 @@ class WeatherController < ApplicationController
 		end
 	end
 
+	def find_postcode_data
 
-	# Need to find a way to combine this with the above data method i.e. to distinguish between whether the parameter is
-	# postcode or a location_id
-	def postcode_data
-		# Pretend a postcode and date have been given:
-		postcode = 3525
-		date = Date.today
-
-
-		p = Postcode.find_by_code(postcode)
-		@locations = p.locations
-
-		# Prepare data for JSON builder:
-		data = {}
-		@locations.each do |l|
-			puts "a location?"
-			readings = Reading.where(:location_id => l.id, :created_at => date)
-			data[l] = readings
-		end
+		@locations = Location.all
 
 		respond_to do |format|
-			format.html
-			format.js
-			format.json {render json: build_postcode_readings(date, data)}
-		end
 
+			format.html {render "find_postcode_data"}
+		end
 	end
+
+	def find_location_data
+
+		respond_to do |format|
+
+			format.html {render "find_location_data"}
+		end
+	end
+
 end
