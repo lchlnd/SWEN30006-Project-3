@@ -14,12 +14,7 @@ class WeatherController < ApplicationController
 		end
 	end
 
-	def location
-		puts params
-		if params[:id]["station_form"]
-			@location = Location.find_by(name: params[:id]["station_form"])
-		end
-	end
+	
 
 	def data
 		@date = Date.parse(params[:date])
@@ -93,9 +88,9 @@ class WeatherController < ApplicationController
 	def redirect_data
 
 		@date = params[:location][:date]
-		@id = params[:location][:id]
-
-		redirect_to :action => "data", :id => @id, :date => @date
+		@id = Location.find_by(:name => params[:location][:name])
+		
+		redirect_to :action => "data", :id => @id.id, :date => @date
 	end
 
 end
