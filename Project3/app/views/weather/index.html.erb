@@ -5,15 +5,18 @@
 <div class="row col-sm-12">
 	<%= form_tag "/weather/location", method: "get" do%>
 		<div class="form-group custom-form-group">
-			<%= label :station, "Station"%>
-			<%= text_field( :id, :station_form,  class: 'form-control')%>
+			
+			<%= text_field( :id, :station_form,   class: 'form-control',placeholder: 'Station Name')%>
+			<%= date_select( :number, :date,  class: 'form-control')%>
 			<%= submit_tag("search") %>
 		</div>
 	<%end%>
 </div>
 
 <div class="row col-sm-12">
-
+	[<% Location.all.each do |l| %>
+		<%=" name:  '#{l.name}' , num:  '#{l.id} ' " %>
+	<%end%>]
 </div>
 
 
