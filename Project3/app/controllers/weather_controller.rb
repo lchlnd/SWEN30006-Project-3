@@ -84,6 +84,22 @@ class WeatherController < ApplicationController
 		end
 	end
 
+	def find_location_pred_data
+
+		respond_to do |format|
+
+			format.html {render "find_location_pred_data"}
+		end
+	end
+
+	def find_postdoce_pred_data
+
+		respond_to do |format|
+
+			format.html {render "find_postcode_pred_data"}
+		end
+	end
+
 	def redirect_location_data
 
 		@id = Location.find_by(:name => params[:location][:name])
@@ -131,6 +147,23 @@ class WeatherController < ApplicationController
 		@date = params[:postcode][:date]
 
 		redirect_to :action => "data", :id => @id.code, :date => @date
+	end
+
+	def redirect_location_pred
+
+		@lat = params[:location][:latitude]
+		@long = params[:location][:longitude]
+		@period = params[:location][:period]
+
+		redirect_to :action => "predict", :lat => @lat, :long => @long, :period => @period
+	end
+
+	def redirect_postcode_pred
+
+		@postcode = params[:postcode][:postcode]
+		@period = params[:postcode][:period]
+
+		redirect_to :action => "postcode_predict", :postcode => @postcode, :period => @period
 	end
 		
 

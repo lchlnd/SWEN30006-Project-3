@@ -1,6 +1,6 @@
 class Aggregation
   EPSILON = 0.0001
-<<<<<<< HEAD
+
   TYPES = %w{rainfall wind_direction wind_speed temperature}
 
 
@@ -10,7 +10,7 @@ class Aggregation
   def self.build_aggregate_hash(latitude, longitude)
 
     # Locations within range
-    location_distances = get_station_distances(latitude, longitude, 5)
+    location_distances = get_station_distances(latitude, longitude)
 
     # Get all readings for each time period of interest
     time_hash = get_time_hash(location_distances, 12)
