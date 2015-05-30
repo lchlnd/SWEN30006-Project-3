@@ -89,7 +89,7 @@ class WeatherController < ApplicationController
 		@prediction_data["predictions"] = Predictor.create @pos, params[:period]
 
 		respond_to do |format|
-			format.html
+			format.html {render "lat_lon_pred"}
 			format.js
 			format.json {render json: @prediction_data}
 		end
@@ -106,7 +106,7 @@ class WeatherController < ApplicationController
 		@prediction_data["predictions"] = Predictor.create  @postcode.position, params[:period]
 
 		respond_to do |format|
-			format.html
+			format.html {render "postcode_pred"}
 			format.js
 			format.json {render json: @prediction_data}
 		end
@@ -150,7 +150,7 @@ class WeatherController < ApplicationController
 		elsif(@period == "")
 			redirect_to :action=> "find_postcode_pred_data",  :error => :period
 		else
-			redirect_to :action => "data", :id => @postcode.code, :period => @period.to_i
+			redirect_to :action => "prediction", :postcode => @postcode.code, :period => @period.to_i
 		end
 	end
 

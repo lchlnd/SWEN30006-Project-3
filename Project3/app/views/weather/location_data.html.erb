@@ -18,7 +18,7 @@
       <% @readings.each do |reading| %>
         <tr>
         	<td><%= reading.created_at %></td>
-        	<td><%= reading.temperature.value %></td>
+        	<td><%= reading.temperature.value %> &#8451;</td>
         	<td><%= reading.rainfall.value %></td>
         	<td><%= reading.wind_direction.value %></td> 
           	<td><%= reading.wind_speed.value.round(2) %></td> 
