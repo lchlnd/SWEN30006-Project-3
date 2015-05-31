@@ -68,7 +68,7 @@ namespace :weather do
       puts "Scraping #{location.name}"
       # Get data for each location
       forecast = JSON.parse(open("#{FIO_BASE_URL}/#{api_key}/#{location.position.latitude},#{location.position.longitude}?units=si&exclude=minutely,hourly,daily,alerts,flags").read)
-      current_data = forecast["currently"].to_hash.with_indifferent_access
+      current_data = forecast['currently'].to_hash.with_indifferent_access
 
       # Include previous rainfall, if exists
       observation_time = Time.at(current_data[:time])
