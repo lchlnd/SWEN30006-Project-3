@@ -1,8 +1,49 @@
 <h1 class= page-header>Postcode - <%= @postcode.code %></h1>
 
-<p>Date: <%= @date %></p>
+<table class="table">
+	<caption>Predictions</caption>
+	<tr>
+		<th>Time m</th>
+		<th>Rain mm</th>
+		<th>Temperature &#8451;</th>
+		<th>Wind Direction &#176;</th>
+		<th>Wind Speed kph</th>
+	</tr>
+	
 
+		<% @prediction_data["predictions"].reverse_each do |time_period| %>
+			<tr>
+				<td> In <%= time_period[0]%></td>
+				<td> 
+					<% if time_period[1]["rain"]["probability"] == -Float::INFINITY  %>
+						0
+					<%else %>
+						<%= time_period[1]["rain"]["value"].round(2) %>
+					<%end%>
+				</td>
+				<td>
+					<% if time_period[1]["temp"]["probability"] == -Float::INFINITY  %>
+						0
+					<%else %>
+						<%= time_period[1]["temp"]["value"].round(2) %>
+					<%end%>
+				</td>
+				<td>
+					<% if time_period[1]["wind_direction"]["probability"] == -Float::INFINITY  %>
+						0
+					<%else %>
+						<%= time_period[1]["wind_direction"]["value"].round(2) %>
+					<%end%>
+				</td>
+				<td>
+					<% if time_period[1]["wind_speed"]["probability"] == -Float::INFINITY  %>
+						0
+					<%else %>
+						<%= time_period[1]["wind_speed"]["value"].round(2) %>
+					<%end%>
+				</td>
+			</tr>
+		<% end %>
 
-<% if @locations == nil %>
-  <p class="text-center">Sorry there is no data to display, please try again later</p>
-<%end%>
+	
+</table>

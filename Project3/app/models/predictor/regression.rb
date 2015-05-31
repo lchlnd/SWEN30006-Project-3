@@ -8,38 +8,34 @@ class Regression
 	#Goes through each regression & returns a hash with highest corresponding r^2 value
 	#Hash is returned in form {:type x, :a z, :b z, etc}
 	#{:type log, :a 10, :b 2}
-	#{:type polynomial, :degree 4, coefficients: [a0,a1,a2,a3], r2: x}
+	#{:type polynomial, :degree 4, coefficients: [a0,a1,a2,a3], fit: x}
 	def self.best_fit xvals, yvals
-		best_r2 = -Float::MAX
-		info = {}
-		tmp ={}
 		#poly_nom
-		tmp = polynomial( xvals , yvals)
-		info = tmp
-		best_r2 = tmp[:r2]
-		puts "poly: #{tmp}"
+		best = {:fit => Float::MAX}
+
 		#linear
 		tmp = linear( xvals , yvals)
-		if( tmp[:r2] > best_r2 )
-			info = tmp
-			best_r2 = tmp[:r2]
+		if( tmp[:fit] < best[:fit] )
+			best = tmp
 		end
 		puts "linear: #{tmp}"
+
 		#log
 		tmp = logarithmic( xvals , yvals)
-		if( tmp[:r2] > best_r2 )
-			info = tmp
-			best_r2 = tmp[:r2]
+		if( tmp[:fit] < best[:fit] )
+			best = tmp
 		end
 		puts "log: #{tmp}"
+
 		#poly_nom
 		tmp = exponential( xvals , yvals)
-		if( tmp[:r2] > best_r2 )
-			info = tmp
-			best_r2 = tmp[:r2]
+		if( tmp[:fit] < best[:fit] )
+			best = tmp
 		end
 		puts "exp #{tmp}"
-		info
+
+		best[:mean] = (yvals.inject(0) { |sum, val| sum + val})/yvals.length
+		best
 	end
 
 	#Takes an array of x values, an array of corresponding y values and a degree and applies a polynomial
@@ -61,20 +57,20 @@ class Regression
 	#Takes an array of x values and an array of corresponding y values and applies a polynomial
 	# regression of each degree between 1 and 10 (inclusive), printing the equation with the best fit. 
 	def self.polynomial xvals, yvals
-		puts yvals
+
 		#Find the polynomial which gives the lowest variance.
 		best_coefficients = poly_regress(xvals, yvals, 2)
-		best_func = Proc.new{ |x| best_coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
-		best_r2 = r_squared(xvals, yvals, best_func)
+		best_func = lambda { |x| best_coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
+		best_fit = measure_fit(xvals, yvals, best_func)
 
 		for deg in (3..10)
 
 			coefficients = poly_regress(xvals, yvals, deg)
-			func = Proc.new{ |x| coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
-			r2 = r_squared(xvals, yvals, func)
+			func = lambda { |x| coefficients.each.with_index.inject(0) { |f_y, (coeff, i)| f_y + coeff*x**i} }
+			fit = measure_fit(xvals, yvals, func)
 
-			if r2 > best_r2
-				best_r2 = r2
+			if fit < best_fit
+				best_fit = fit
 				
 				best_coefficients = []
 				coefficients.each do |c|
@@ -85,25 +81,7 @@ class Regression
 		end
 		puts "best function = #{best_func}"
 
-
-
-		info = {:function => best_func, :r2 => best_r2}
-		#Convert the polynomial into a string.  Do not include a term if its coefficient is less than or equal to EPS (=0.005), 
-		# unless it is the coefficient of the highest order term.
-		# poly_string = ""
-		# best_coeff.to_enum.with_index.reverse_each do |coeff, i| 
-		# 	if i == (best_coeff.length - 1)
-		# 		poly_string.concat("%.2fx^#{i} " % coeff)
-		# 	elsif i == 0
-		# 		poly_string.concat("%c %.2f " % [coeff > 0 ? '+' : '-', coeff.abs])
-		# 	elsif i == 1
-		# 		poly_string.concat("%c %.2fx " % [coeff>0? '+' : '-', coeff.abs])
-		# 	else
-		# 		poly_string.concat("%c %.2fx^#{i} " % [coeff>0 ? '+' : '-', coeff.abs])
-		# 	end
-		# end
-		info
-
+		info = {:function => best_func, :fit => best_fit}
 	end
 
 
@@ -115,9 +93,9 @@ class Regression
 		b = coefficients[0]
 
 		func = lambda { |x| a*x + b }
-		r2 = r_squared(xvals, yvals, func)
+		fit = measure_fit(xvals, yvals, func)
 
-		info = {:function => func, :r2 => r2}
+		info = {:function => func, :fit => fit}
 	end
 
 
@@ -141,9 +119,9 @@ class Regression
 
 		func = lambda { |x| b*Math.log(x) + a}
 
-		r2 = r_squared(xvals, yvals, func)
+		fit = measure_fit(xvals, yvals, func)
 
-		info = {:function => func, :r2 => r2}
+		info = {:function => func, :fit => fit}
 
 	end
 
@@ -164,26 +142,23 @@ class Regression
 		coefficients = [a,b]
 
 		func = lambda { |x| a*Math.exp(b*x) }
-		r2 = r_squared(xvals, yvals, func) 
+		fit = measure_fit(xvals, yvals, func) 
 
-		info = {:function => func, :r2 => r2}
+		info = {:function => func, :fit => fit}
 	end
 
 
-	#Takes an array of x values, an array of corresponding y values and a block defining a function that.
-	#Returns the R^2 value of these arguments.
-	def self.r_squared xvals, yvals, func
+	#Takes an array of x values, an array of corresponding y values and a lambda defining a function.
+	#Returns the residual sum of squares of this data with trespect to the given function
+	def self.measure_fit xvals, yvals, func
 		y_model = []
 		xvals.each {|x_i| y_model << func.call(x_i)}
 		ss_res= ((yvals.zip(y_model)).inject(0) { |var, (y_i, f_i)| var + (y_i - f_i)**2 })
-		mean = (yvals.inject(0) { |sum, y_i| sum + y_i })/yvals.length
-		ss_tot = yvals.inject(0) { |sum, y_i| sum + (y_i - mean)**2 }
-		#puts "res = #{ss_res}"
-		#puts "tot = #{ss_tot}"
-		r2 = 1 - ss_res/ss_tot
+
+		return ss_res
 	end
 
-	private_class_method :r_squared
+	private_class_method :measure_fit
 	private_class_method :poly_regress
 end
 

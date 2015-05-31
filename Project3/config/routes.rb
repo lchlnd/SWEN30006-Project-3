@@ -1,16 +1,15 @@
 Rails.application.routes.draw do
+  root 'weather#index'
+
   get 'weather/locations'
 
   get 'weather/location'
   get 'weather/location/:id', to: 'weather#location'
   get 'weather/data/:id/:date', to: 'weather#data'
-  get 'weather/data/:id/:period', to: 'weather#data'
 
-
-  # Only temporary:
-  get 'weather/postcode_data'
-
-  root 'weather#index'
+  # Need to allow for decimal points in latitude and longitude values
+  get 'weather/prediction/:lat/:long/:period', to: 'weather#predict', :constraints => { :lat => /[^\/]*/, :long => /[^\/]*/ }
+  get 'weather/prediction/:postcode/:period', to: 'weather#postcode_predict'
 
   get 'weather/find_postcode_data'
   get 'weather/find_location_data'
@@ -21,11 +20,6 @@ Rails.application.routes.draw do
   get 'weather/find_postcode_pred_data'
   get 'weather/redirect_location_pred'
   get 'weather/redirect_postcode_pred'
-
- 
-  # Need to allow for decimal points in latitude and longitude values
-  get 'weather/prediction/:lat/:long/:period', to: 'weather#predict', :constraints => { :lat => /[^\/]*/, :long => /[^\/]*/ }
-  get 'weather/prediction/:postcode/:period', to: 'weather#postcode_pred'
 
 
 

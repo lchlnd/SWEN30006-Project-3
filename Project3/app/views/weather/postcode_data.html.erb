@@ -1,43 +1,44 @@
 <h1 class= page-header>Postcode - <%= @postcode.code %></h1>
 
-<p>Date: <%= @date %></p>
+<% if @locations == [] %>
+  <p>There are no weather stations in this postcode</p>
+<% else %>
+  <p>Date: <%= @date %></p>
 
 
-<% if @locations == nil %>
-  <p class="text-center">Sorry there is no data to display, please try again later</p>
-<%end%>
 
-<% @locations.each do |location| %>
-	
-	<table class= table>
+  <% @locations.each do |location| %>
+  	
+  	<table class= table>
 
-		<thead>
-    	<caption> <b>Station: <%= location.name %>. Lat: <%= location.position.latitude %>, Lon: <%= location.position.longitude %></b></caption>
-     		<tr>
-     			<th> Time </th>
-       			<th> Temperature </th>
-        		<th> Precip </th>
-        		<th> Wind Direction </th>
-          		<th> Wind Speed </th>
-      		</tr>
-   		</thead>
+  		<thead>
+      	<caption> <b>Station: <%= location.name %>. Lat: <%= location.position.latitude %>, Lon: <%= location.position.longitude %></b></caption>
+       		<tr>
+       			<th> Time </th>
+         			<th> Temperature </th>
+          		<th> Precip </th>
+          		<th> Wind Direction </th>
+            		<th> Wind Speed </th>
+        		</tr>
+     		</thead>
 
-    	<tbody>
+      	<tbody>
 
-        <% @location_readings[location].each do |reading| %>
-          <tr>
-            <td><%= reading.created_at %></td>
-            <td><%= reading.temperature.value %></td>
-            <td><%= reading.rainfall.value %></td>
-            <td><%= reading.wind_direction.value %></td>
-            <td><%= reading.wind_speed.value.round(2) %></td>
-          </tr>
-     		
-            
+          <% @location_readings[location].each do |reading| %>
+            <tr>
+              <td><%= reading.created_at %></td>
+              <td><%= reading.temperature.value %></td>
+              <td><%= reading.rainfall.value %></td>
+              <td><%= reading.wind_direction.value %></td>
+              <td><%= reading.wind_speed.value.round(2) %></td>
+            </tr>
+       		
+              
 
-          <%end%>
-    	</tbody>
+            <%end%>
+      	</tbody>
 
-	</table>
+  	</table>
 
+  <% end %>
 <% end %>

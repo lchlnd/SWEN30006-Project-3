@@ -58,8 +58,11 @@ class WeatherController < ApplicationController
 				format.json {render json: build_postcode_readings(@date, @location_readings, @last_updates)}
 			end
 		else
-			# Need a way to return an error message if the user enters an invalid location_id or postcode
-			#render "Error - invalid location/postcode id"
+			respond_to do |format|
+				format.html {redirect_to :action => "find_location_data", :error => :station_name}
+				format.js
+				format.json {render json: {"location" => "null", "predictions" => "null"}}
+			end
 		end
 	end
 
@@ -70,15 +73,15 @@ class WeatherController < ApplicationController
 
 	def redirect_location_data
 
-		@id = Location.find_by(:name => params[:location][:name])
+		@loc = Location.find_by(:name => params[:location][:name])
 		@date = params[:location][:date]
 
-		if(@id == nil)
+		if(@loc == nil)
 			redirect_to :action=> "find_location_data", :error => :station_name
 		elsif(@date == "")
 			redirect_to :action=> "find_location_data", :error => :date
 		else
-			redirect_to :action => "data", :id => @id.id, :date => @date
+			redirect_to :action => "data", :id => @loc.id, :date => @date
 		end
 	end
 
@@ -158,26 +161,20 @@ class WeatherController < ApplicationController
 		elsif(@period == "")
 			redirect_to :action=> "find_postcode_pred_data",  :error => :period
 		else
-			redirect_to :action => "prediction", :postcode => @postcode.code, :period => @period.to_i
+			redirect_to :action => "postcode_predict", :postcode => @postcode.code, :period => @period.to_i
 		end
 	end
 
 
 	def index
 		@average_temperature = []
-		
 		location = Location.find_by(:name =>"Melbourne Airport")
 
-		
 		tot_temp = 0.0
 		count    = 0.0
 		location.readings.where(:created_at=> Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).each do |reading|
 			@average_temperature << [reading.created_at,reading.temperature.value]
 		end
-		
-		
-	
-
 	end
 
 end
