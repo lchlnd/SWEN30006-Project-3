@@ -7,11 +7,15 @@ class WeatherController < ApplicationController
 	def locations
 
 		@locations = Location.all
+		@location_data = {}
+		@locations.each do |loc|
+			@location_data[loc] = Reading.where(:location_id => loc.id).last.created_at.localtime.strftime("%H:%M%p %d-%m-%Y")
+		end
 		respond_to do |format|
 			format.html
 			# format.js probably not needed because we are not using any javascript
 			format.js
-			format.json {render json: build_locations(@locations, Date.today)}
+			format.json {render json: build_locations(@location_data, Date.today)}
 		end
 	end
 
@@ -22,14 +26,12 @@ class WeatherController < ApplicationController
 
 		if (@location = Location.find_by_id params[:id].to_i) != nil
 			@readings = Reading.where(:location_id => @location.id, :created_at => @date.beginning_of_day..@date.end_of_day)
-
-			@current_temp = 20
-			@current_cond = "sunny"
+			@conditions = @location.current_conditions
 			
 			respond_to do |format|
 				format.html {render "location_data"}
 				format.js
-				format.json {render json: build_location_readings(@readings, @date, @current_temp, @current_cond)}
+				format.json {render json: build_location_readings(@readings, @date, @conditions)}
 			end
 		elsif (@postcode = Postcode.find_by_code params[:id].to_i) != nil
 
@@ -43,7 +45,7 @@ class WeatherController < ApplicationController
 				@location_readings[l] = []
 				readings = Reading.where(:location_id => l.id)
 				readings.each do |r|
-					if r.created_at.to_date == @date
+					if r.created_at.to_date.to_local == @date
 						@location_readings[l] << r
 					end
 				end

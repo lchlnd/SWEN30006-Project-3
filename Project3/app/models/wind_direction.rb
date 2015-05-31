@@ -2,9 +2,9 @@ class WindDirection < Datapoint
 
 	# Converts the wind direction from a value in degrees to a string containing the corresponding compass bearing 
 	def compass_string
-		map = {0 => 'N', 22.5 => 'NNE', 45 => 'NE', 67.5 => 'ENE', 90 => 'E', 112.5 => 'ESE', 135 => 'SE', 
-			157.5 => 'SSE', 180 => 'S', 202.5 => 'SSW', 225 => 'SW', 247.5 => 'WSW', 270 => 'W', 292.5 => 'WNW',
-			315 => 'NW', 337.5 => 'NNW', 360 => 'N'}
+		map = {0.0 => 'N', 22.5 => 'NNE', 45.0 => 'NE', 67.5 => 'ENE', 90.0 => 'E', 112.5 => 'ESE', 135.0 => 'SE', 
+			157.5 => 'SSE', 180.0 => 'S', 202.5 => 'SSW', 225.0 => 'SW', 247.5 => 'WSW', 270.0 => 'W', 292.5 => 'WNW',
+			315.0 => 'NW', 337.5 => 'NNW', 360.0 => 'N'}
 		map[(self.value/22.5).round*22.5]
 	end
 

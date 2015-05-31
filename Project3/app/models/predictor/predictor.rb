@@ -37,11 +37,11 @@ class Predictor
 			@pred.create_temperature(:value => temp_vals[t], :probability => temp_hash[:r2])
 
 			# Create hash for API request/web page rendering
-			rain_pred = {"value" => rain_vals[t], "probability" => rain_hash[:r2]}
-			windspeed_pred = {"value" => windspeed_vals[t], "probability" => windspeed_hash[:r2]}
-			winddir_pred = {"value" => winddir_vals[t]%TRUE_NORTH, "probability" => winddir_hash[:r2]}
-			temp_pred = {"value" => temp_vals[t], "probability" => temp_hash[:r2]}
-			predictions["#{t}m"] = {"rain" => rain_pred, "temp" => temp_pred, "wind_direction" => winddir_pred, "wind_speed" => windspeed_pred}
+			rain_pred = {"value" => rain_vals[t].to_s + "mm", "probability" => rain_hash[:r2]}
+			windspeed_pred = {"value" => windspeed_vals[t].to_s, "probability" => windspeed_hash[:r2]}
+			winddir_pred = {"value" => (winddir_vals[t]%TRUE_NORTH).to_s, "probability" => winddir_hash[:r2]}
+			temp_pred = {"value" => temp_vals[t].to_s, "probability" => temp_hash[:r2]}
+			predictions["#{t}"] = {"time" => (Time.now + t.minutes).localtime.strftime("%H:%M%p %d-%m-%Y"), "rain" => rain_pred, "temp" => temp_pred, "wind_direction" => winddir_pred, "wind_speed" => windspeed_pred}
 		end
 		predictions
 	end
@@ -60,7 +60,7 @@ class Predictor
 		values = {}
 		for t in (0..period.to_i).step(10)
 			val = func.call(Time.now.to_i - time_reference + t*SECPERMIN)
-			values[t] = val > 0 ? val : 0
+			values[t] = val > 0 ? val.round(2) : 0
 		end
 		values
 	end
