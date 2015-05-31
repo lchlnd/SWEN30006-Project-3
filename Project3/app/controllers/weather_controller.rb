@@ -63,7 +63,9 @@ class WeatherController < ApplicationController
 		end
 	end
 
-
+	def find_location_data
+		@locations = Location.all
+	end
 
 
 	def redirect_location_data
@@ -135,9 +137,15 @@ class WeatherController < ApplicationController
 		@long = params[:location][:longitude]
 		@period = params[:location][:period]
 
-
-
-		redirect_to :action => "predict", :lat => @lat, :long => @long, :period => @period
+		if(@lat == "")
+			redirect_to :action=> "find_location_pred_data", :error => :latitude
+		elsif(@long=="")
+			redirect_to :action=> "find_location_pred_data", :error => :longitude
+		elsif(@period=="")
+			redirect_to :action=> "find_location_pred_data", :error => :period
+		else
+			redirect_to :action => "predict", :lat => @lat, :long => @long, :period => @period
+		end
 	end
 
 	def redirect_postcode_pred

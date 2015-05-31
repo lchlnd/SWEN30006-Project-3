@@ -1,0 +1,8 @@
+<h1 class= page-header>Postcode - <%= @postcode.code %></h1>
+
+<p>Date: <%= @date %></p>
+
+
+<% if @locations == nil %>
+  <p class="text-center">Sorry there is no data to display, please try again later</p>
+<%end%>
