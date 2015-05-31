@@ -18,7 +18,7 @@
         	<td><%= link_to "#{location.name}", :controller => "weather", :action =>"data", :id =>location.id, :date => Date.today %></td>
         	<td><%= location.position.latitude %></td>
         	<td><%= location.position.longitude %></td>
-        	<td><%= location.updated_at %></td> 
+        	<td><%= location.updated_at.localtime.strftime("%d-%m-%Y at %H:%M%p") %></td> 
         </tr>
       <% end %>
 

@@ -3,7 +3,7 @@
 <% if @locations == [] %>
   <p>There are no weather stations in this postcode</p>
 <% else %>
-  <p>Date: <%= @date %></p>
+  <p><b>Date:</b> <%= @date.to_time.strftime("%B %e, %Y") %></p>
 
 
 
@@ -15,22 +15,22 @@
       	<caption> <b>Station: <%= location.name %>. Lat: <%= location.position.latitude %>, Lon: <%= location.position.longitude %></b></caption>
        		<tr>
        			<th> Time </th>
-         			<th> Temperature </th>
-          		<th> Precip </th>
-          		<th> Wind Direction </th>
-            		<th> Wind Speed </th>
-        		</tr>
+         		<th> Temperature </th>
+          	<th> Precip </th>
+          	<th> Wind Direction </th>
+            <th> Wind Speed </th>
+        	</tr>
      		</thead>
 
       	<tbody>
 
           <% @location_readings[location].each do |reading| %>
             <tr>
-              <td><%= reading.created_at %></td>
-              <td><%= reading.temperature.value %></td>
-              <td><%= reading.rainfall.value %></td>
-              <td><%= reading.wind_direction.value %></td>
-              <td><%= reading.wind_speed.value.round(2) %></td>
+              <td><%= reading.created_at.localtime.strftime("%H:%M%p") %></td>
+              <td><%= reading.temperature.value %>&#8451;</td>
+              <td><%= reading.rainfall.value %>mm</td>
+              <td><%= reading.wind_direction.compass_string %></td>
+              <td><%= reading.wind_speed.value.round(2) %> kph</td>
             </tr>
        		
               

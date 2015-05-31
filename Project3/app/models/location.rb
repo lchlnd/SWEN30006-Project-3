@@ -5,9 +5,11 @@ class Location < ActiveRecord::Base
   has_many :readings
 
   SECPERMIN = 60
-  RAIN_THRESHOLD = 3
+  RAIN_THRESHOLD = 1
   WARM_THRESHOLD = 25
   WINDY_THRESHOLD = 30
+  FREEZING_THRESHOLD = 5
+  STILL_THRESHOLD = 3
 
   def current_conditions
   	r = self.readings.last
@@ -17,8 +19,12 @@ class Location < ActiveRecord::Base
   			cond = "raining"
   		elsif(r.temperature.value >= WARM_THRESHOLD)
   			cond = "warm"
+      elsif(r.temperature.value <= FREEZING_THRESHOLD)
+        cond = "freezing"
   		elsif(r.wind_speed.value >= WINDY_THRESHOLD)
   			cond = "windy"
+      elsif(r.wind_speed.value <= STILL_THRESHOLD)
+        cond = "still"
   		else
   			cond = "mild"
   		end

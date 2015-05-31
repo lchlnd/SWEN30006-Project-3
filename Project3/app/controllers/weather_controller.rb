@@ -25,13 +25,20 @@ class WeatherController < ApplicationController
 		@date_readings = []
 
 		if (@location = Location.find_by_id params[:id].to_i) != nil
-			@readings = Reading.where(:location_id => @location.id, :created_at => @date.beginning_of_day..@date.end_of_day)
+			@readings = Reading.where(:location_id => @location.id).order("created_at DESC")
+			@daily_readings = []
+			@readings.each do |r|
+				if r.created_at.localtime.to_date == @date
+					@daily_readings << r
+				end
+			end
+
 			@conditions = @location.current_conditions
 			
 			respond_to do |format|
 				format.html {render "location_data"}
 				format.js
-				format.json {render json: build_location_readings(@readings, @date, @conditions)}
+				format.json {render json: build_location_readings(@daily_readings, @date, @conditions)}
 			end
 		elsif (@postcode = Postcode.find_by_code params[:id].to_i) != nil
 
@@ -43,15 +50,13 @@ class WeatherController < ApplicationController
 			# Find all readings for each location, and store them in a hashmap.
 			@locations.each do |l|
 				@location_readings[l] = []
-				readings = Reading.where(:location_id => l.id)
-				readings.each do |r|
-					if r.created_at.to_date.to_local == @date
+				@readings = Reading.where(:location_id => l.id).order("created_at DESC")
+				@readings.each do |r|
+					if r.created_at.localtime.to_date == @date
 						@location_readings[l] << r
 					end
 				end
-				puts "In locations loop"
-
-				@last_updates[l] = readings.order("created_at").last.created_at
+				@last_updates[l] = @readings.order("created_at").last.created_at
 			end
 
 			respond_to do |format|
