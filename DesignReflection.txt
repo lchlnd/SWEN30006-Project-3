@@ -34,7 +34,8 @@ One major problem we faced was getting accurate data for our predictions. We dec
 given data (for a particular position or postcode) and gather a line of best fit, which we would then use 
 to determine the future readings. However in deciding the line of best fit, the polynomial line would normally 
 result in being the best, as we were able to apply a high order polynomial to the given datset, where it would 
-come relitivly close to the actual data. This gave us problems for when we needed to guess the future predictions, as we were looking ahead from the givin data into the area of the polynomial where the line 
+come relitivly close to the actual data. This gave us problems for when we needed to guess the future 
+predictions, as we were looking ahead from the givin data into the area of the polynomial where the line 
 shoots off in a particular direction. This gave us really unrealistic predictions for all of our given data, 
 so in the end we had to eliminate the polynomial line of best fit from our regressor as all our results were 
 ending up skewed.
