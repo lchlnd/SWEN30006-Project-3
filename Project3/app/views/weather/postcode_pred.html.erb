@@ -10,37 +10,20 @@
 		<th>Wind Speed</th>
 	</tr>
 	
-
-		<% @prediction_data["predictions"].reverse_each do |time_period| %>
+		<<% @prediction_data["predictions"].reverse_each do |time_period| %>
 			<tr>
 				<td> In <%= time_period[0]%> minutes</td>
 				<td> 
-					<% if time_period[1]["rain"]["probability"] == -Float::INFINITY  %>
-						0
-					<%else %>
-						<%= time_period[1]["rain"]["value"] %>
-					<%end%>
+					<%= time_period[1]["rain"]["value"] + " (#{time_period[1]["rain"]["probability"]*100}%)"%>
 				</td>
 				<td>
-					<% if time_period[1]["temp"]["probability"] == -Float::INFINITY  %>
-						0
-					<%else %>
-						<%= time_period[1]["temp"]["value"] %>&#8451;
-					<%end%>
+					<%= time_period[1]["temp"]["value"] %>&#8451; <%= "(#{time_period[1]["temp"]["probability"]*100}%)" %>
 				</td>
 				<td>
-					<% if time_period[1]["wind_direction"]["probability"] == -Float::INFINITY  %>
-						0
-					<%else %>
-						<%= time_period[1]["wind_direction"]["value"] %>&#176;
-					<%end%>
+					<%= time_period[1]["wind_direction"]["value"] %>&#176; <%= "(#{time_period[1]["wind_direction"]["probability"]*100}%)" %>
 				</td>
 				<td>
-					<% if time_period[1]["wind_speed"]["probability"] == -Float::INFINITY  %>
-						0
-					<%else %>
-						<%= time_period[1]["wind_speed"]["value"] %>kph
-					<%end%>
+					<%= time_period[1]["wind_speed"]["value"] %>kph <%= "(#{time_period[1]["wind_speed"]["probability"]*100}%)" %>
 				</td>
 			</tr>
 		<% end %>

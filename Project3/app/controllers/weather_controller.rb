@@ -111,7 +111,8 @@ class WeatherController < ApplicationController
 	def postcode_predict
 
 		if (@postcode = Postcode.find_by_code(params[:postcode])) == nil
-			return :error
+			redirect_to :action=> "find_postcode_pred_data", :error=> :postcode
+			return
 		end
 		
 		@prediction_data = {"postcode" => params[:postcode]}

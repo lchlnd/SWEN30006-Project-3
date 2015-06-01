@@ -28,8 +28,6 @@ class Location < ActiveRecord::Base
   		else
   			cond = "mild"
   		end
-
-
   		return {"current_temp" => r.temperature.value.to_s, "current_cond" => cond}
   	else
   		return {"current_temp" => "null", "current_cond" => "null"}

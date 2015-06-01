@@ -1,7 +1,7 @@
 <h1 class= page-header>Listing Data for <%= @location.name %></h1>
 
 <p> <b>Date:</b> <%= @date.to_time.strftime("%B %e, %Y") %></p>
-<p> <b>Current temperature:</b> <%= @conditions["current_temp"] %>&#8451;</p>
+<p> <b>Current temperature:</b> <%= @conditions["current_temp"] %> <% @conditions["current_temp"] == "null" ? "" : "&#8451;"%></p>
 <p> <b>Current conditions:</b> <%= @conditions["current_cond"] %></p>
 
 
@@ -20,7 +20,7 @@
       <% @daily_readings.each do |reading| %>
         <tr>
         	<td><%= reading.created_at.localtime.strftime("%H:%M%p") %></td>
-        	<td><%= reading.temperature.value %> &#8451;</td>
+        	<td><%= reading.temperature.value %>&#8451;</td>
         	<td><%= reading.rainfall.value %>mm</td>
         	<td><%= reading.wind_direction.compass_string %></td> 
           	<td><%= reading.wind_speed.value.round(2) %> kph</td> 
