@@ -30,35 +30,22 @@ to include in the final implentation.
 
 Problems which occurred during Implentation:
 
-One major problem we faced was getting accurate data for our predictions. We decided to regress a set of 
-given data (for a particular position or postcode) and gather a line of best fit, which we would then use 
-to determine the future readings. However in deciding the line of best fit, the polynomial line would normally 
-result in being the best, as we were able to apply a high order polynomial to the given datset, where it would 
-come relitivly close to the actual data. This gave us problems for when we needed to guess the future 
-predictions, as we were looking ahead from the givin data into the area of the polynomial where the line 
-shoots off in a particular direction. This gave us really unrealistic predictions for all of our given data, 
-so in the end we had to eliminate the polynomial line of best fit from our regressor as all our results were 
-ending up skewed.
+One major problem we faced was getting accurate data for our predictions. We decided to regress a set of given data (for a particular position or postcode) and gather a line of best fit, which we would then use 
+to determine the future readings. However in deciding the line of best fit, the polynomial line would normally result in being the best, as we were able to apply a high order polynomial to the given datset, where it would 
+come relitivly close to the actual data. This gave us problems for when we needed to guess the future predictions, as we were looking ahead from the givin data into the area of the polynomial where the line shoots off in a particular direction. This gave us really unrealistic predictions for all of our given data, so in the end we had to eliminate the polynomial line of best fit from our regressor as all our results were ending up skewed.
 
-Another minor problem we found was getting a reasonable value for prediction probability. We wanted something 
-which is indicative of how close the line of best fit is to the actual data, but also takes into account the 
-reducing probability as time goes on.
-Therefore we came up with a solution which slightly decreased as time progressed but also decresed more if the 
-residual sum of squares/mean was greater than 1. Meaning it gave us a time depended probability which also takes 
-into account data which varies a lot from the line of best fit.
+Secondly, issues were encountered when attempting to combine the aggregation, regression and prediction classes. Although  suitable interfaces had been designed and discussed, when it came to actually making use of these interfaces some problems came up.  The most significant of these stemmed from the fact that different members ofthe group had their databases populated with different data, and in certain instances insufficient data would cause the prediction process to break down at various stages.  This was fixed by resetting databases together.  On the whole, the process was certainly made far more manageable and streamlined as a result of discussions regarding
+what this interface would look like.
+
+Furthermore, when it came to measuring the fit of our regressions, it was difficult to choose a measure that would be useful and effective - initially r-squared was used, however this caused issues when the pool of data being regressed was small, or when data values didn't change much over time.  As a results, we settled for a simple measure of fit, being a comparison between the residual sum of squares and the mean value of the data.
+
+The final problem we found was minor, and stemmed from how to gain a reasonable value for prediction probability. We wanted something which is indicative of how close the line of best fit is to the actual data, but also takes into account the decreasing accuracy as time goes on.
+Therefore we came up with a solution which slightly decreased as time progressed but also decresed more if the residual sum of squares/mean was greater than 1. Meaning it gave us a time depended probability which also takes into account data which varies a lot from the line of best fit.
 
 
 Addition Notes:
 
-Overall our group found that spending time on the design process to ensure everything was through and 
-interconnected was valuable to the implentation stage of this project. We found it easier to implement an 
-application where we already had everything mapped out on paper. It was also more efficent as we were able to 
-simply follow what was on the design brief, knowing that the decision thinking was already taken care of. All 
-that was needed to do was follow a set of rules and put what was on paper into practice.
-Saying that we did still find errors where we needed to re-evaluate our original design and re coordinate steps
-we were going to take to achieve a given task. But this is all a part of the waterfall design process, and 
-overall it did make it easier and much more efficient to develop an application of this extent than it would 
-without any prior design and planning.
+Overall our group found that spending time on the design process to ensure everything was through and interconnected was valuable to the implentation stage of this project. We found it easier to implement an application where we already had everything mapped out on paper. It was also more efficent as we were able to simply follow what was on the design brief, knowing that the decision thinking was already taken care of. All that was needed to do was follow a set of rules and put what was on paper into practice. Saying that we did still find errors where we needed to re-evaluate our original design and re coordinate steps we were going to take to achieve a given task. But this is all a part of the waterfall design process, and overall it did make it easier and much more efficient to develop an application of this extent than it would without any prior design and planning.
 
 
 
