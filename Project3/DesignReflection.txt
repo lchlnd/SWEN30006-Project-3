@@ -1,0 +1,77 @@
+SWEN30006 Project 3: 
+Group - 37
+Students:
+	nmalishev - 637410
+	lbrick - 638126
+	ldee - 638672
+	rokane - 587723
+
+
+Changes to our Original Design Brief:
+
+As a group we decided to differ from our original design by seperating the 'Dataset' entity which originally
+used inheritance to create Prediction and Reading entitys. We realized this was unneccessary as reading 
+doesn't need an associated probability with it, and the two seperate datasets are associated with different
+classes in themselves (Prediction refering to a position, Reading refering to a location).
+
+The updated Class diagram which is included as a PDF in the Design Documentation folder shows the difference
+between the old and new designs. Where have now implemented a model structure where 'Prediction' is associated
+solely with 'Position' and 'Reading' associated with 'Location', each having their own datapoints associated 
+with them. This allows us to fulfil the requirements of the API calls more easily than prior, where we can 
+search previous 'Readings' associated with their location and postcode, and then generate predicted data when 
+needed corresponding to a particular position or via a postcode. Furthermore we don't have to generate an 
+unneccesary probability with each reading, as the probability of every reading would always be 1 due to it 
+always being correct.
+
+One more thing that resulted in seperating the 'Dataset' entity was that we no longer needed to implement 
+the factory method to create differing types of datasets. This made it easier for us as it was one less thing 
+to include in the final implentation.
+
+
+Problems which occurred during Implentation:
+
+One major problem we faced was getting accurate data for our predictions. We decided to regress a set of 
+given data (for a particular position or postcode) and gather a line of best fit, which we would then use 
+to determine the future readings. However in deciding the line of best fit, the polynomial line would normally 
+result in being the best, as we were able to apply a high order polynomial to the given datset, where it would 
+come relitivly close to the actual data. This gave us problems for when we needed to guess the future 
+predictions, as we were looking ahead from the givin data into the area of the polynomial where the line 
+shoots off in a particular direction. This gave us really unrealistic predictions for all of our given data, 
+so in the end we had to eliminate the polynomial line of best fit from our regressor as all our results were 
+ending up skewed.
+
+Another minor problem we found was getting a reasonable value for prediction probability. We wanted something 
+which is indicative of how close the line of best fit is to the actual data, but also takes into account the 
+reducing probability as time goes on.
+Therefore we came up with a solution which slightly decreased as time progressed but also decresed more if the 
+residual sum of squares/mean was greater than 1. Meaning it gave us a time depended probability which also takes 
+into account data which varies a lot from the line of best fit.
+
+
+Addition Notes:
+
+Overall our group found that spending time on the design process to ensure everything was through and 
+interconnected was valuable to the implentation stage of this project. We found it easier to implement an 
+application where we already had everything mapped out on paper. It was also more efficent as we were able to 
+simply follow what was on the design brief, knowing that the decision thinking was already taken care of. All 
+that was needed to do was follow a set of rules and put what was on paper into practice.
+Saying that we did still find errors where we needed to re-evaluate our original design and re coordinate steps
+we were going to take to achieve a given task. But this is all a part of the waterfall design process, and 
+overall it did make it easier and much more efficient to develop an application of this extent than it would 
+without any prior design and planning.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
