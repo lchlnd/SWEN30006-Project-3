@@ -10,7 +10,7 @@
 		<th>Wind Speed</th>
 	</tr>
 	
-		<<% @prediction_data["predictions"].reverse_each do |time_period| %>
+		<% @prediction_data["predictions"].reverse_each do |time_period| %>
 			<tr>
 				<td> In <%= time_period[0]%> minutes</td>
 				<td> 
